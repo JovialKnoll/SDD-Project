@@ -40,7 +40,7 @@ class Game(object):
         """Update the game objects."""
         #call update functions for all objects
         if self.miniGame:
-            miniGame.process_events()
+            miniGame.update()
         else:
             pass
         
