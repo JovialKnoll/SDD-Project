@@ -1,11 +1,15 @@
 
 import pygame
 
+#a line class of somesort should be defined
+
 class MiniGame(object):
-    def __init__(self):
-        """Initiate the mini-game."""
-        #hold miscellaneous objects here if they don't care about processing events
-        objects = []
+    def __init__(self, material):
+        """Initiate the mini-game, material should be a list of question, answer tuples."""
+        #hold objects here
+        self.material = material
+        self.materialCopy = [(x[0],x[1],0) for x in material]
+        self.objects = []
         
     def process_events(self, run):
         """Process the event queue, take in player input for the mini-game."""
@@ -20,11 +24,11 @@ class MiniGame(object):
     def update(self):
         """Update the game objects held by the mini-game."""
         #you'll also need to update other things that matter, of course
-        for o in objects:
+        for o in self.objects:
             o.update
         
     def draw(self, screen):
         """Draw the game objects held by the mini-game."""
         #you'll also need to draw other things that matter, of course
-        for o in objects:
+        for o in self.objects:
             o.draw(screen)
