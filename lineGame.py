@@ -9,6 +9,7 @@ class Line(object):
         self.endPos = startPos
         self.done = False
         self.correct = True
+        self.count = 60
         
     def update(self):
         if not self.done:
@@ -17,10 +18,18 @@ class Line(object):
             #return 0 if not done, 1 if done correct, 2 if done incorrect
             return 0
         else:
-            return 1
+            t = False#replace with actually finding if correct or not
+            if t:
+                return 1
+            else:
+                self.correct = False
+                self.count -= 1
+                if self.count < 0:
+                    return 3
+                return 2
             
     def draw(self, screen):
-        pygame.draw.line(screen, (255 * (1-self.correct), 255 * (1-self.done), 0), self.startPos, self.endPos)
+        pygame.draw.line(screen, (255 * (1-self.correct), 255 * (1-self.done), 255 * (1-self.done)), self.startPos, self.endPos)
 
 class LineGame(MiniGame):
     def __init__(self, material):
@@ -50,8 +59,12 @@ class LineGame(MiniGame):
                     
     def update(self):
         MiniGame.update(self)
-        for l in self.linesWrong:
-            l.update()
+        #for l in 
+        self.linesWrong = [l for l in self.linesWrong if l.update() != 3]
+        #for l in self.linesWrong:
+        #    l.update()
+        #    if l.count < 0:
+                
         if not (self.currentLine == False):
             temp = self.currentLine.update()
             if temp == 1:
@@ -62,7 +75,7 @@ class LineGame(MiniGame):
                 self.currentLine = False
                 
     def draw(self, screen):
-        pygame.draw.rect(screen, (200,200,200), (0,0,screen.get_width(),screen.get_height()))
+        pygame.draw.rect(screen, (127,127,127), (0,0,screen.get_width(),screen.get_height()))
         MiniGame.draw(self, screen)
         for l in self.linesWrong:
             l.draw(screen)
