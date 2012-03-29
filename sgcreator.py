@@ -1,7 +1,7 @@
 #must install wxpython to the version of python running this code.
 
 import wx
-import xml2
+import xmlWriter
 
 class StudyGuideCreator(wx.Frame):
     
@@ -24,7 +24,7 @@ class StudyGuideCreator(wx.Frame):
 
         #row 2
         self.hbox2 = wx.BoxSizer(wx.HORIZONTAL)
-        self.button_save = wx.Button(self.main_panel, 5, label="Add Term")
+        self.button_save = wx.Button(self.main_panel, 5, label="Save Study Guide")
         self.hbox2.Add(self.button_save, 1, wx.EXPAND | wx.LEFT | wx.RIGHT, 70)
         
         #row 1
@@ -66,10 +66,10 @@ class StudyGuideCreator(wx.Frame):
         
         
         #rack em up
-        self.vbox.Add(self.hbox2, 0, wx.ALL | wx.EXPAND, 10)
+        self.vbox.Add(self.hbox2, 1, wx.ALL | wx.EXPAND, 10)
         self.vbox.Add(self.hbox1, 0, wx.ALL | wx.EXPAND, 10)
         self.vbox.Add(self.hbox4, 0, wx.ALL | wx.EXPAND, 10)
-        self.vbox.Add(self.hbox6, 1, wx.ALL | wx.EXPAND, 10)
+        self.vbox.Add(self.hbox6, 7, wx.ALL | wx.EXPAND, 10)
         
         #Interactivtize me baby
         wx.EVT_BUTTON(self, 2, self._add_term)
@@ -105,7 +105,7 @@ class StudyGuideCreator(wx.Frame):
         
     def save(self, event):
         data = [(self.termList[i], [self.defList[i]]) for i in range(0, len(self.termList))]
-        xml2.saveXML(data)
+        xmlWriter.saveXML(data)
     
     """
     def _on_key_down(self, event):
