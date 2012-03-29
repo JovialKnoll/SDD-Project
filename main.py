@@ -16,7 +16,7 @@ fpsLimit = 30
 #Probably should make this inherit from the actor class...
 class Avatar(object):
     
-    __velocity = (200, 200)
+    __velocity = (800, 800)
     __res = (50,50)
 
     
