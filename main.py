@@ -11,14 +11,12 @@ random.seed()
 screenSize = (800, 600)
 fpsLimit = 30
 
-
 #Main Menu Player Avatar
 #Probably should make this inherit from the actor class...
 class Avatar(object):
     
     __velocity = (800, 800)
     __res = (50,50)
-
     
     def __init__(self, pos):
         """Makes an avatar for menu selection."""
@@ -52,8 +50,6 @@ class Avatar(object):
         
     def draw(self, screen):
         screen.blit(self.sprite, (self.rect.left, self.rect.top), self.sprite.get_rect())
-        
-
         
 class LoaderBox(object):
 
@@ -90,8 +86,6 @@ class LoaderBox(object):
     
     def draw(self, screen):
         screen.blit(self.sprite, (self.rect.left, self.rect.top), self.sprite.get_rect())
-        
-        
 
 #Game Object
 class Game(object):
@@ -111,9 +105,6 @@ class Game(object):
         self.avatar = False
         self.createGUI()
         
-          
-
-
         #lots of other stuff will be needed, of course
         
         #debug stuff below
@@ -154,8 +145,7 @@ class Game(object):
         self.loaderBoxes.append(tempBox)
         
         print len(self.loaderBoxes)
-
-    
+        
     def process_events(self):
         """Process the event queue, take in player input."""
         #lots of other stuff will be needed, of course
@@ -206,8 +196,7 @@ class Game(object):
                 if l.rect.colliderect(self.avatar.rect):
                     self.loadItem(l.getId())
                     pass
-            
-        
+                    
     def draw(self):
         """Draw the game objects."""
         #call draw functions for all objects
@@ -219,14 +208,12 @@ class Game(object):
             for l in self.loaderBoxes:
                 l.draw(self.screen)
                 
-                
     def loadItem(self, id):
         #only loading LineGame for now
         del self.loaderBoxes[:]
         del self.avatar
         if id == 0:
             self.miniGame = LineGame([])
-        
         
 def main():
     g = Game()
