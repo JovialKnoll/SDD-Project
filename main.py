@@ -4,6 +4,7 @@
 from __future__ import division
 import pygame, sys, random
 from miniGame import MiniGame
+from lineGame import LineGame
 
 random.seed()
 #Global Variables
@@ -81,12 +82,16 @@ class Game(object):
         self.avatar.setPos((self.avatar.getPos()[0] - self.avatar.getRes()[0] / 2, self.avatar.getPos()[1] - self.avatar.getRes()[1] / 2))
         #lots of other stuff will be needed, of course
         
+        #debug stuff below
+        self.miniGame = LineGame([])
+        
     def process_events(self):
         """Process the event queue, take in player input."""
         #lots of other stuff will be needed, of course
         run = True
         if self.miniGame:
-            miniGame.process_events(run)
+            if not self.miniGame.process_events():
+                self.miniGame = False
         else:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -122,13 +127,14 @@ class Game(object):
         delta_time = float(self.clock.tick(self.__fps)) / 1000
         
         if self.miniGame:
-            miniGame.update()
+            self.miniGame.update()
         else:
             self.avatar.update(delta_time)
         
     def draw(self):
         """Draw the game objects."""
         #call draw functions for all objects
+        pygame.draw.rect(self.screen, (0,0,0), (0,0,screenSize[0],screenSize[1]))
         if self.miniGame:
             self.miniGame.draw(self.screen)
         else:
