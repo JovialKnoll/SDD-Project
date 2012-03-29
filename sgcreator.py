@@ -1,6 +1,7 @@
 #must install wxpython to the version of python running this code.
 
 import wx
+
 import xmlWriter
 
 class StudyGuideCreator(wx.Frame):
