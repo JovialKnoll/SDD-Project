@@ -222,6 +222,7 @@ class Game(object):
                 
     def loadItem(self, id):
         #only loading LineGame for now
+        #touching another box breaks shit
         del self.loaderBoxes[:]
         del self.avatar
         if id == 0:
