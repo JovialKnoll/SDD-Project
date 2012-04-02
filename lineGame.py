@@ -29,7 +29,8 @@ class Line(object):
                 return 2
             
     def draw(self, screen):
-        pygame.draw.line(screen, (255 * (1-self.correct), 255 * (1-self.done), 255 * (1-self.done)), self.startPos, self.endPos)
+        if (self.count/5)%2 == 0:
+            pygame.draw.line(screen, (255 * (1-self.correct), 255 * (1-self.done), 255 * (1-self.done)), self.startPos, self.endPos)
 
 class LineGame(MiniGame):
     def __init__(self, material):
@@ -75,7 +76,7 @@ class LineGame(MiniGame):
                 self.currentLine = False
                 
     def draw(self, screen):
-        pygame.draw.rect(screen, (127,127,127), (0,0,screen.get_width(),screen.get_height()))
+        pygame.draw.rect(screen, (160,160,160), (0,0,screen.get_width(),screen.get_height()))
         MiniGame.draw(self, screen)
         for l in self.linesWrong:
             l.draw(screen)
