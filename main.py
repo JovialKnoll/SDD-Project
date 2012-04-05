@@ -5,6 +5,7 @@ from __future__ import division
 import pygame, sys, random
 from miniGame import MiniGame
 from lineGame import LineGame
+from flipGame import FlipGame
 from guideLoader import GuideLoader
 
 random.seed()
@@ -227,7 +228,9 @@ class Game(object):
         #self.avatar.setPos((self.avatar.getPos()[0] - self.avatar.getRes()[0] / 2, self.avatar.getPos()[1] - self.avatar.getRes()[1] / 2))
         if id == 0:
             self.miniGame = LineGame([])
-        if id == 1:
+        elif id == 1:
+            self.miniGame = FlipGame([])
+        elif id == 2:
             self.menu = GuideLoader(screenSize)
         else:
             self.createGUI()

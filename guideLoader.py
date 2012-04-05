@@ -1,5 +1,5 @@
 import pygame
-from listXMLFiles import listXMLFiles
+from gbxml import listXMLFiles
 
 
 class LineItem(object):
