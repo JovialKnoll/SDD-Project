@@ -2,14 +2,38 @@
 import pygame
 from miniGame import MiniGame
 
+class QA(object):
+    def __init__(self, question, answer, posQ=0, posA=0):
+        
+        #self.question = question
+        #self.answer = answer
+        self.qSize = Font.size(question)
+        self.aSize = Font.size(answer)
+        self.qImage = Font.render(question,False,(0,0,255))
+        self.aImage = Font.render(answer,False,(0,0,255))
+        self.posQ = posQ
+        self.posA = posA
+        self.done = False
+        
+        
+    def update(self):
+        pass
+        
+    def draw(self, screen):
+        pass
+
 class Line(object):
-    def __init__(self, startPos):
+    def __init__(self, startPos, listQA):
         """StartPos should be a tuple of x and y position."""
         self.startPos = startPos
         self.endPos = startPos
         self.done = False
         self.correct = True
         self.count = 60
+        self.listQA = listQA
+        
+    def isCorrect(self):
+        pass
         
     def update(self):
         if not self.done:
@@ -31,13 +55,16 @@ class Line(object):
     def draw(self, screen):
         if (self.count/5)%2 == 0:
             pygame.draw.line(screen, (255 * (1-self.correct), 255 * (1-self.done), 255 * (1-self.done)), self.startPos, self.endPos)
-
+            
 class LineGame(MiniGame):
     def __init__(self, material):
         MiniGame.__init__(self, material)
         self.linesWrong = []
         self.currentLine = False
         self.mousePressed = False
+        self.qas = [QA(pair) for pair in self.material]
+        
+        #make list of QA's, pass to lines
         
     def process_events(self):
         run = True
@@ -49,22 +76,17 @@ class LineGame(MiniGame):
                     run = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if not self.mousePressed:
-                    self.currentLine = Line(pygame.mouse.get_pos())
+                    self.currentLine = Line(pygame.mouse.get_pos(),self.qas)
                     self.mousePressed = True
             if event.type == pygame.MOUSEBUTTONUP:
                 if self.mousePressed:
                     self.currentLine.done = True
                     self.mousePressed = False
-                
         return run
                     
     def update(self):
         MiniGame.update(self)
-        #for l in 
         self.linesWrong = [l for l in self.linesWrong if l.update() != 3]
-        #for l in self.linesWrong:
-        #    l.update()
-        #    if l.count < 0:
                 
         if not (self.currentLine == False):
             temp = self.currentLine.update()
