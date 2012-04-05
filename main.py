@@ -5,6 +5,7 @@ from __future__ import division
 import pygame, sys, random
 from miniGame import MiniGame
 from lineGame import LineGame
+from guideLoader import GuideLoader
 
 random.seed()
 #Global Variables
@@ -26,7 +27,7 @@ class Avatar(object):
         self.state = {"left":False, "right":False, "up":False, "down":False}
         
         #Alter sprite pathing and use subsurfaces when sprite sheets are made
-        self.sprite = pygame.image.load("redSquare.png").convert_alpha()
+        self.sprite = pygame.image.load("gfx/redSquare.png").convert_alpha()
         
     def setPos(self, pos):
         self.rect.topleft = pos
@@ -59,7 +60,7 @@ class LoaderBox(object):
         """Create a box to load a menu/game."""
         self.rect = pygame.Rect((0,0), self.__res)
         self.setPos(pos)
-        self.sprite = pygame.image.load("loaderBox.png").convert_alpha()
+        self.sprite = pygame.image.load("gfx/loaderBox.png").convert_alpha()
         self.rotation = rotation
         self.res = self.__res
         self.id = id     
@@ -86,6 +87,7 @@ class LoaderBox(object):
     
     def draw(self, screen):
         screen.blit(self.sprite, (self.rect.left, self.rect.top), self.sprite.get_rect())
+    
 
 #Game Object
 class Game(object):
@@ -104,6 +106,7 @@ class Game(object):
         self.curLoaderId = 0
         self.avatar = False
         self.createGUI()
+        self.menu = False
         
         #lots of other stuff will be needed, of course
         
@@ -154,6 +157,10 @@ class Game(object):
             if not self.miniGame.process_events():
                 self.miniGame = False
                 self.createGUI()
+        elif self.menu:
+            if not self.menu.process_events():
+                self.menu = False
+                self.createGUI()
         else:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -190,6 +197,8 @@ class Game(object):
         
         if self.miniGame:
             self.miniGame.update()
+        elif self.menu:
+            self.menu.update()
         else:
             self.avatar.update(delta_time)
             for l in self.loaderBoxes:
@@ -203,6 +212,8 @@ class Game(object):
         pygame.draw.rect(self.screen, (0,0,0), (0,0,screenSize[0],screenSize[1]))
         if self.miniGame:
             self.miniGame.draw(self.screen)
+        elif self.menu:
+            self.menu.draw(self.screen)
         else:
             self.avatar.draw(self.screen)
             for l in self.loaderBoxes:
@@ -210,11 +221,16 @@ class Game(object):
                 
     def loadItem(self, id):
         #only loading LineGame for now
-        #touching another box breaks shit
         del self.loaderBoxes[:]
         del self.avatar
+        #self.avatar.setPos(((self.screen.get_width() / 2), self.screen.get_height() / 2))
+        #self.avatar.setPos((self.avatar.getPos()[0] - self.avatar.getRes()[0] / 2, self.avatar.getPos()[1] - self.avatar.getRes()[1] / 2))
         if id == 0:
             self.miniGame = LineGame([])
+        if id == 1:
+            self.menu = GuideLoader(screenSize)
+        else:
+            self.createGUI()
         
 def main():
     g = Game()
