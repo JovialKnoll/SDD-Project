@@ -8,10 +8,13 @@ class QA(object):
         
         #self.question = question
         #self.answer = answer
-        self.qSize = Font.size(question)
-        self.aSize = Font.size(answer)
-        self.qImage = pygame.font.SysFont(pygame.font.get_default_font(),12).render(question,False,(0,0,255))
-        self.aImage = pygame.font.SysFont(pygame.font.get_default_font(),12).render(answer,False,(0,0,255))
+        f = pygame.font.SysFont(pygame.font.get_default_font(),20)
+        #print question
+        #print answer
+        self.qSize = f.size(question)
+        self.aSize = f.size(answer)
+        self.qImage = f.render(question,False,(0,0,255))
+        self.aImage = f.render(answer,False,(0,0,255))
         self.posQ = posQ
         self.posA = posA
         self.done = False
@@ -67,7 +70,7 @@ class LineGame(MiniGame):
         horizontalPositionsA = [(i*self.screenSize[0]/len(self.material)) for i in range(len(self.material))]
         shuffle(horizontalPositionsQ)
         shuffle(horizontalPositionsA)
-        self.qas = [QA(self.material[num],horizontalPositionsQ[num],horizontalPositionsA[num]) for num in range(len(self.material))]
+        self.qas = [QA(self.material[num][0],self.material[num][1],horizontalPositionsQ[num],horizontalPositionsA[num]) for num in range(len(self.material))]
         
         #make list of QA's, pass to lines
         
@@ -105,6 +108,8 @@ class LineGame(MiniGame):
     def draw(self, screen):
         pygame.draw.rect(screen, (160,160,160), (0,0,screen.get_width(),screen.get_height()))
         MiniGame.draw(self, screen)
+        for qa in  self.qas:
+            qa.draw(screen)
         for l in self.linesWrong:
             l.draw(screen)
         if not (self.currentLine == False):
