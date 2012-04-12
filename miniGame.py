@@ -4,9 +4,10 @@ import pygame
 #a line class of some sort should be defined
 
 class MiniGame(object):
-    def __init__(self, material):
+    def __init__(self, screenSize, material):
         """Initiate the mini-game, material should be a list of question, answer tuples."""
         #hold objects here
+        self.screenSize = screenSize;
         self.material = material
         self.materialCopy = [(x[0],x[1],0) for x in material]
         self.objects = []

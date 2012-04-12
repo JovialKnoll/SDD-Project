@@ -227,9 +227,9 @@ class Game(object):
         #self.avatar.setPos(((self.screen.get_width() / 2), self.screen.get_height() / 2))
         #self.avatar.setPos((self.avatar.getPos()[0] - self.avatar.getRes()[0] / 2, self.avatar.getPos()[1] - self.avatar.getRes()[1] / 2))
         if id == 0:
-            self.miniGame = LineGame([])
+            self.miniGame = LineGame(screenSize,[])
         elif id == 1:
-            self.miniGame = FlipGame([])
+            self.miniGame = FlipGame(screenSize,[])
         elif id == 2:
             self.menu = GuideLoader(screenSize)
         else:
