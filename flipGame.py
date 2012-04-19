@@ -10,6 +10,8 @@ class Card(object):
         self.rect = pygame.Rect(position, (100,100))
         self.indexNum = -1
         self.show = False
+        self.hide = False
+        self.hideWhenDone = False
         self.flipping = False
         self.matchReset = None
         
@@ -31,23 +33,37 @@ class Card(object):
             if self.matchReset.flipping == 0:
                 self.flip()
                 self.matchReset.flip()
+                self.update_hide()
+                self.matchReset.update_hide()
                 self.matchReset.matchReset = None
                 self.matchReset = None
     
     def draw(self, screen, cardSurface):
-        area = pygame.Rect(0, 0, self.rect.width, self.rect.height)
-        screen.blit(cardSurface, self.rect, area)
-        if self.show:
-            screen.blit(self.fontSurf, (self.rect.x, self.rect.y + (self.rect.height - self.fontSurf.get_height())/2), area)
+        if not self.hide or self.flipping > 0:
+            area = pygame.Rect(0, 0, self.rect.width, self.rect.height)
+            screen.blit(cardSurface, self.rect, area)
+            if self.show:
+                screen.blit(self.fontSurf, (self.rect.x, self.rect.y + (self.rect.height - self.fontSurf.get_height())/2), area)
     
     def flip(self):
-        if self.flipping != 0:
+        if self.flipping != 0 or self.hide:
             return False
         self.flipping = 1
-        return not self.show
+        return not self.show or self.hide
     
     def reset(self, otherCard):
         self.matchReset = otherCard
+    
+    def reset_and_hide(self, otherCard, hide):
+        self.matchReset = otherCard
+        self.hideWhenDone = hide
+    
+    def hide(self, hide):
+        self.hide = hide
+        self.hideWhenDone = hide
+    
+    def update_hide(self):
+        self.hide = self.hideWhenDone
         
 class FlipGame(MiniGame):
     def __init__(self, material):
@@ -83,24 +99,7 @@ class FlipGame(MiniGame):
                 mousePos = event.pos
                 for card in self.cards:
                     if card.rect.collidepoint(mousePos):
-                        if card.flip():
-                            self.itemsFlipped.append(card)
-                            if len(self.itemsFlipped) > 1:
-                                match = False
-                                if self.itemsFlipped[0].indexNum > -1:
-                                    if self.material[self.itemsFlipped[0].indexNum][1][0] == card.term:
-                                        self.score += 10
-                                        print self.score
-                                        
-                                if card.indexNum > -1:
-                                    if self.itemsFlipped[0].term == self.material[card.indexNum][1][0]:
-                                        self.score += 10
-                                        print self.score
-                                self.itemsFlipped[0].reset(card)
-                                card.reset(self.itemsFlipped[0])
-                                self.itemsFlipped = []
-                        else:
-                            self.itemsFlipped.remove(card)
+                        self.flip_card(card)
         return run
     
     def update(self):
@@ -112,3 +111,25 @@ class FlipGame(MiniGame):
             card.draw(screen, self.cardSurface)
         scoresurf = self.font.render("Score: " + str(self.score) + " points", True, (50,250,50))
         screen.blit(scoresurf, (50, 50), scoresurf.get_rect())
+    
+    def flip_card(self, card):
+        if card.flip():
+            self.itemsFlipped.append(card)
+            if len(self.itemsFlipped) > 1:
+                match = False
+                if self.itemsFlipped[0].indexNum > -1:
+                    if self.material[self.itemsFlipped[0].indexNum][1][0] == card.term:
+                        self.score += 10
+                        match = True
+                        print self.score
+                    
+                if card.indexNum > -1:
+                    if self.itemsFlipped[0].term == self.material[card.indexNum][1][0]:
+                        self.score += 10
+                        match = True
+                        print self.score
+                self.itemsFlipped[0].reset_and_hide(card, match)
+                card.reset_and_hide(self.itemsFlipped[0], match)
+                self.itemsFlipped = []
+        elif len(self.itemsFlipped) > 0 and self.itemsFlipped[0] == card:
+            self.itemsFlipped.remove(card)

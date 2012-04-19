@@ -6,10 +6,11 @@ import pygame, sys, random
 from miniGame import MiniGame
 from lineGame import LineGame
 from flipGame import FlipGame
-from guideLoader import GuideLoader
+#from guideLoader import GuideLoader
 
 random.seed()
 #Global Variables
+#screenSize = (1280, 960)
 screenSize = (800, 600)
 fpsLimit = 30
 
@@ -231,9 +232,11 @@ class Game(object):
         #self.avatar.setPos(((self.screen.get_width() / 2), self.screen.get_height() / 2))
         #self.avatar.setPos((self.avatar.getPos()[0] - self.avatar.getRes()[0] / 2, self.avatar.getPos()[1] - self.avatar.getRes()[1] / 2))
         if id == 0:
-            self.miniGame = LineGame([])
+            #debug code
+            m = [("1+1","2"),("2+2","4"),("1+2","3"),("2+3","5"),("3+3","6"),("3+4","7"),("4+4","8"),("4+5","9")]
+            self.miniGame = LineGame(screenSize,m)
         elif id == 1:
-            self.miniGame = FlipGame([])
+            self.miniGame = FlipGame(screenSize,[])
         elif id == 2:
             self.guideMenu = GuideLoader(screenSize)
         else:

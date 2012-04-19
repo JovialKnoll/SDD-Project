@@ -1,5 +1,6 @@
 
 import pygame
+from random import shuffle
 from miniGame import MiniGame
 
 class QA(object):
@@ -7,20 +8,23 @@ class QA(object):
         
         #self.question = question
         #self.answer = answer
-        self.qSize = Font.size(question)
-        self.aSize = Font.size(answer)
-        self.qImage = Font.render(question,False,(0,0,255))
-        self.aImage = Font.render(answer,False,(0,0,255))
+        f = pygame.font.SysFont(pygame.font.get_default_font(),20)
+        #print question
+        #print answer
+        self.qSize = f.size(question)
+        self.aSize = f.size(answer)
+        self.qImage = f.render(question,False,(0,0,255))
+        self.aImage = f.render(answer,False,(0,0,255))
         self.posQ = posQ
         self.posA = posA
         self.done = False
-        
         
     def update(self):
         pass
         
     def draw(self, screen):
-        pass
+        screen.blit(self.qImage, (self.posQ, screen.get_height()/3))
+        screen.blit(self.aImage, (self.posA, screen.get_height()*2/3))
 
 class Line(object):
     def __init__(self, startPos, listQA):
@@ -57,12 +61,16 @@ class Line(object):
             pygame.draw.line(screen, (255 * (1-self.correct), 255 * (1-self.done), 255 * (1-self.done)), self.startPos, self.endPos)
             
 class LineGame(MiniGame):
-    def __init__(self, material):
-        MiniGame.__init__(self, material)
+    def __init__(self, screenSize, material):
+        MiniGame.__init__(self, screenSize, material)
         self.linesWrong = []
         self.currentLine = False
         self.mousePressed = False
-        self.qas = [QA(pair) for pair in self.material]
+        horizontalPositionsQ = [(i*self.screenSize[0]/len(self.material)) for i in range(len(self.material))]
+        horizontalPositionsA = [(i*self.screenSize[0]/len(self.material)) for i in range(len(self.material))]
+        shuffle(horizontalPositionsQ)
+        shuffle(horizontalPositionsA)
+        self.qas = [QA(self.material[num][0],self.material[num][1],horizontalPositionsQ[num],horizontalPositionsA[num]) for num in range(len(self.material))]
         
         #make list of QA's, pass to lines
         
@@ -100,6 +108,8 @@ class LineGame(MiniGame):
     def draw(self, screen):
         pygame.draw.rect(screen, (160,160,160), (0,0,screen.get_width(),screen.get_height()))
         MiniGame.draw(self, screen)
+        for qa in  self.qas:
+            qa.draw(screen)
         for l in self.linesWrong:
             l.draw(screen)
         if not (self.currentLine == False):
