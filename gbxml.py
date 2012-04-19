@@ -3,21 +3,26 @@ import os
 
 def loadXML(filename):
     data = []
-    studyguide = parse(filename)
-    questions = studyguide.iter("question")
-    i = 0
-    for q in questions:
-        qAndAPair = [q.text, []]
-        data.append(qAndAPair)
-        answers = q.iter("answer")
-        j = 1
-        for a in answers:
-            if a.attrib["correct"] == "true":
-                data[i][1].insert(0, a.text)
-            else:
-                data[i][1].insert(j, a.text)
-                j += 1
-        i += 1
+    success = True
+    try:
+        studyguide = parse(filename)
+    except:
+        success = False
+    if success:
+        questions = studyguide.iter("question")
+        i = 0
+        for q in questions:
+            qAndAPair = [q.text, []]
+            data.append(qAndAPair)
+            answers = q.iter("answer")
+            j = 1
+            for a in answers:
+                if a.attrib["correct"] == "true":
+                    data[i][1].insert(0, a.text)
+                else:
+                    data[i][1].insert(j, a.text)
+                    j += 1
+            i += 1
     return data
 
 def saveXML(data):
