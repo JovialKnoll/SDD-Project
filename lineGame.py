@@ -4,7 +4,7 @@ from random import shuffle
 from miniGame import MiniGame
 
 class QA(object):
-    def __init__(self, question, answer, posQ=0, posA=0):
+    def __init__(self, question, answer, posQ=(0,0), posA=(0,0)):
         
         #self.question = question
         #self.answer = answer
@@ -15,16 +15,16 @@ class QA(object):
         self.aSize = f.size(answer)
         self.qImage = f.render(question,False,(0,0,255))
         self.aImage = f.render(answer,False,(0,0,255))
-        self.posQ = posQ
-        self.posA = posA
+        self.rectQ = pygame.Rect(posQ[0],posQ[1],self.qSize[0],self.qSize[1])
+        self.rectA = pygame.Rect(posA[0],posA[1],self.aSize[0],self.aSize[1])
         self.done = False
         
     def update(self):
         pass
         
     def draw(self, screen):
-        screen.blit(self.qImage, (self.posQ, screen.get_height()/3))
-        screen.blit(self.aImage, (self.posA, screen.get_height()*2/3))
+        screen.blit(self.qImage, (self.rectQ[0], self.rectQ[1]))
+        screen.blit(self.aImage, (self.rectA[0], self.rectA[1]))
 
 class Line(object):
     def __init__(self, startPos, listQA):
@@ -32,12 +32,18 @@ class Line(object):
         self.startPos = startPos
         self.endPos = startPos
         self.done = False
-        self.correct = True
+        self.correct = False
         self.count = 60
         self.listQA = listQA
         
-    def isCorrect(self):
-        pass
+    def checkCorrect(self):
+        for qa in self.listQA:
+            if qa.done:
+                continue
+            if (qa.rectQ.collidepoint(self.startPos) and qa.rectA.collidepoint(self.endPos)) or (qa.rectQ.collidepoint(self.endPos) and qa.rectA.collidepoint(self.startPos)):
+                self.correct = True
+                qa.done = True
+                break
         
     def update(self):
         if not self.done:
@@ -46,11 +52,9 @@ class Line(object):
             #return 0 if not done, 1 if done correct, 2 if done incorrect
             return 0
         else:
-            t = False#replace with actually finding if correct or not
-            if t:
+            if self.correct:
                 return 1
             else:
-                self.correct = False
                 self.count -= 1
                 if self.count < 0:
                     return 3
@@ -58,7 +62,7 @@ class Line(object):
             
     def draw(self, screen):
         if (self.count/5)%2 == 0:
-            pygame.draw.line(screen, (255 * (1-self.correct), 255 * (1-self.done), 255 * (1-self.done)), self.startPos, self.endPos)
+            pygame.draw.line(screen, (255 * (1-(self.done == self.correct)), 255 * (1-self.done), 255 * (1-self.done)), self.startPos, self.endPos)
             
 class LineGame(MiniGame):
     def __init__(self, screenSize, material):
@@ -70,7 +74,7 @@ class LineGame(MiniGame):
         horizontalPositionsA = [(i*self.screenSize[0]/len(self.material)) for i in range(len(self.material))]
         shuffle(horizontalPositionsQ)
         shuffle(horizontalPositionsA)
-        self.qas = [QA(self.material[num][0],self.material[num][1],horizontalPositionsQ[num],horizontalPositionsA[num]) for num in range(len(self.material))]
+        self.qas = [QA(self.material[num][0],self.material[num][1],(horizontalPositionsQ[num],screenSize[0]/3),(horizontalPositionsA[num],screenSize[0]*2/3)) for num in range(len(self.material))]
         
         #make list of QA's, pass to lines
         
@@ -89,6 +93,7 @@ class LineGame(MiniGame):
             if event.type == pygame.MOUSEBUTTONUP:
                 if self.mousePressed:
                     self.currentLine.done = True
+                    self.currentLine.checkCorrect()
                     self.mousePressed = False
         return run
                     
