@@ -66,11 +66,14 @@ class Card(object):
         self.hide = self.hideWhenDone
         
 class FlipGame(MiniGame):
-    def __init__(self, material):
-        MiniGame.__init__(self, material)
+    def __init__(self, screenSize, material):
+        MiniGame.__init__(self, screenSize, material)
         self.cardSurface = pygame.Surface((100, 100))
         self.cardSurface.fill((75, 200, 75))
-        self.material = [("Spongebob", ["Squarepants"]), ("Patrick", ["Star"]), ("Squidward", ["Tentacles"])]
+        if not material:
+            self.material = [("Spongebob", ["Squarepants"]), ("Patrick", ["Star"]), ("Squidward", ["Tentacles"])]
+        else:
+            self.material = material
         self.cards = [Card(((i%5)*150, floor(i/5) * 150 + 150)) for i in range(0, len(self.material) * 2)]
         self.font = pygame.font.Font(pygame.font.get_default_font(), 12)
         self.itemsFlipped = []

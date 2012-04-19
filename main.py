@@ -6,7 +6,7 @@ import pygame, sys, random
 from miniGame import MiniGame
 from lineGame import LineGame
 from flipGame import FlipGame
-#from guideLoader import GuideLoader
+from guideLoader import GuideLoader
 
 random.seed()
 #Global Variables
@@ -236,7 +236,7 @@ class Game(object):
             m = [("1+1","2"),("2+2","4"),("1+2","3"),("2+3","5"),("3+3","6"),("3+4","7"),("4+4","8"),("4+5","9")]
             self.miniGame = LineGame(screenSize,m)
         elif id == 1:
-            self.miniGame = FlipGame(screenSize,[])
+            self.miniGame = FlipGame(screenSize, self.guideData)
         elif id == 2:
             self.guideMenu = GuideLoader(screenSize)
         else:
