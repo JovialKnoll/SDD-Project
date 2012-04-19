@@ -3,6 +3,9 @@ import pygame
 from random import shuffle
 from miniGame import MiniGame
 
+#Global Variables
+QABORDER = 8
+
 class QA(object):
     def __init__(self, question, answer, posQ=(0,0), posA=(0,0)):
         
@@ -11,20 +14,29 @@ class QA(object):
         f = pygame.font.SysFont(pygame.font.get_default_font(),20)
         #print question
         #print answer
-        self.qSize = f.size(question)
-        self.aSize = f.size(answer)
-        self.qImage = f.render(question,False,(0,0,255))
-        self.aImage = f.render(answer,False,(0,0,255))
-        self.rectQ = pygame.Rect(posQ[0],posQ[1],self.qSize[0],self.qSize[1])
-        self.rectA = pygame.Rect(posA[0],posA[1],self.aSize[0],self.aSize[1])
+        self.sizeQ = f.size(question)
+        self.sizeA = f.size(answer)
+        
+        self.imageQ = f.render(question,False,(0,0,255))
+        self.imageA = f.render(answer,False,(0,0,255))
+        self.rectQ = pygame.Rect(posQ[0]-QABORDER,posQ[1]-QABORDER,self.sizeQ[0]+QABORDER*2,self.sizeQ[1]+QABORDER*2)
+        self.rectA = pygame.Rect(posA[0]-QABORDER,posA[1]-QABORDER,self.sizeA[0]+QABORDER*2,self.sizeA[1]+QABORDER*2)
         self.done = False
+        
+    def checkCorrect(self, pos1, pos2):
+        if (self.rectQ.collidepoint(pos1) and self.rectA.collidepoint(pos2)) or (self.rectQ.collidepoint(pos2) and self.rectA.collidepoint(pos1)):
+            self.done = True
+            return True
+        return False
         
     def update(self):
         pass
         
     def draw(self, screen):
-        screen.blit(self.qImage, (self.rectQ[0], self.rectQ[1]))
-        screen.blit(self.aImage, (self.rectA[0], self.rectA[1]))
+        screen.fill((0,0,100+50*self.done), self.rectQ)
+        screen.fill((0,0,100+50*self.done), self.rectA)
+        screen.blit(self.imageQ, (self.rectQ[0]+QABORDER, self.rectQ[1]+QABORDER))
+        screen.blit(self.imageA, (self.rectA[0]+QABORDER, self.rectA[1]+QABORDER))
 
 class Line(object):
     def __init__(self, startPos, listQA):
@@ -40,9 +52,8 @@ class Line(object):
         for qa in self.listQA:
             if qa.done:
                 continue
-            if (qa.rectQ.collidepoint(self.startPos) and qa.rectA.collidepoint(self.endPos)) or (qa.rectQ.collidepoint(self.endPos) and qa.rectA.collidepoint(self.startPos)):
+            if qa.checkCorrect(self.startPos, self.endPos):
                 self.correct = True
-                qa.done = True
                 break
         
     def update(self):
@@ -70,8 +81,8 @@ class LineGame(MiniGame):
         self.linesWrong = []
         self.currentLine = False
         self.mousePressed = False
-        horizontalPositionsQ = [(i*self.screenSize[0]/len(self.material)) for i in range(len(self.material))]
-        horizontalPositionsA = [(i*self.screenSize[0]/len(self.material)) for i in range(len(self.material))]
+        horizontalPositionsQ = [(QABORDER+i*self.screenSize[0]/len(self.material)) for i in range(len(self.material))]
+        horizontalPositionsA = [(QABORDER+i*self.screenSize[0]/len(self.material)) for i in range(len(self.material))]
         shuffle(horizontalPositionsQ)
         shuffle(horizontalPositionsA)
         self.qas = [QA(self.material[num][0],self.material[num][1],(horizontalPositionsQ[num],screenSize[0]/3),(horizontalPositionsA[num],screenSize[0]*2/3)) for num in range(len(self.material))]
