@@ -107,7 +107,9 @@ class Game(object):
         self.curLoaderId = 0
         self.avatar = False
         self.createGUI()
-        self.menu = False
+        self.guideMenu = False
+        
+        self.guideData = []
         
         #lots of other stuff will be needed, of course
         
@@ -158,9 +160,11 @@ class Game(object):
             if not self.miniGame.process_events():
                 self.miniGame = False
                 self.createGUI()
-        elif self.menu:
-            if not self.menu.process_events():
-                self.menu = False
+        elif self.guideMenu:
+            if not self.guideMenu.process_events():
+                self.guideData = self.guideMenu.retrieveData()
+                print self.guideData
+                self.guideMenu = False
                 self.createGUI()
         else:
             for event in pygame.event.get():
@@ -198,8 +202,8 @@ class Game(object):
         
         if self.miniGame:
             self.miniGame.update()
-        elif self.menu:
-            self.menu.update()
+        elif self.guideMenu:
+            self.guideMenu.update()
         else:
             self.avatar.update(delta_time)
             for l in self.loaderBoxes:
@@ -213,8 +217,8 @@ class Game(object):
         pygame.draw.rect(self.screen, (0,0,0), (0,0,screenSize[0],screenSize[1]))
         if self.miniGame:
             self.miniGame.draw(self.screen)
-        elif self.menu:
-            self.menu.draw(self.screen)
+        elif self.guideMenu:
+            self.guideMenu.draw(self.screen)
         else:
             self.avatar.draw(self.screen)
             for l in self.loaderBoxes:
@@ -231,7 +235,7 @@ class Game(object):
         elif id == 1:
             self.miniGame = FlipGame([])
         elif id == 2:
-            self.menu = GuideLoader(screenSize)
+            self.guideMenu = GuideLoader(screenSize)
         else:
             self.createGUI()
         
