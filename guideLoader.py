@@ -1,5 +1,5 @@
 import pygame
-from gbxml import listXMLFiles
+from gbxml import listLocalXMLFiles
 from gbxml import loadXML
 
 
