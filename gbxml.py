@@ -1,4 +1,5 @@
 from xml.etree.ElementTree import ElementTree, parse, TreeBuilder, SubElement, dump
+from ftplib import FTP
 import os
 
 def loadXML(filename):
@@ -42,18 +43,44 @@ def saveXML(data):
     #dump(studyguide)
     ElementTree(studyguide).write("new.xml")
 
-def listXMLFiles():
-    xmlFiles = []
-    path = "./xml"
-    dirList = os.listdir(path)
-    i = 0
-    for fname in dirList:
+def listLocalXMLFiles():
+    path = "xml/"
+    return filterFiles(os.listdir(path), path)
+	
+def listRemoteXMLFiles():
+    ftp = FTP("tothemathmos.com")
+    ftp.login("gigabright", "learningisfun")
+    list = filterFiles(ftp.nlst())
+    ftp.quit()
+    return list
+
+def download(file):
+    ftp = FTP("tothemathmos.com")
+    ftp.login("gigabright", "learningisfun")
+    ftp.retrbinary("RETR " + file, open("xml/" + file, 'wb').write)
+    ftp.quit()
+	
+def upload(file):
+    ftp = FTP("tothemathmos.com")
+    ftp.login("gigabright", "learningisfun")
+    ftp.storbinary("STOR " + file, open("xml/" + file, "rb"))
+    ftp.quit()
+
+def filterFiles(files, path = ""):
+    xmlList = []
+    for fname in files:
         if fname.endswith(".xml"):
-            #print fname
-            xmlFiles.append(path + "/" + fname)
-            ++i
-    return xmlFiles
-    
+            xmlList.append(path + fname)
+    return xmlList
+	
+#download("lol.txt")
+#upload("example.xml")
+
+#list = listRemoteXMLFiles()
+#print list
+#list = listLocalXMLFiles()
+#print list
+
 #data = [("Question 1?", ["bla1", "lah1", "lol1"]), ("Question 2?", ["bla2", "lah2", "lol2"])]
 #saveXML(data)
 
