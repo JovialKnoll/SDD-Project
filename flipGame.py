@@ -3,6 +3,8 @@ import pygame
 import random
 from miniGame import MiniGame
 from math import floor
+from textWrapper import wrap_text
+from textWrapper import get_font_surf
 
 class Card(object):
     def __init__(self, position):
@@ -82,12 +84,11 @@ class FlipGame(MiniGame):
         for i in range(len(self.cards)):
             if i%2 == 0:
                 self.cards[i].term = self.material[i/2][0]
-                self.cards[i].fontSurf = self.font.render(self.cards[i].term, True, (0,0,0))
+                self.cards[i].fontSurf = get_font_surf(self.font, self.cards[i].term, 100, True, (0,0,0), (75,200,75))
                 self.cards[i].indexNum = i/2
             else:
                 self.cards[i].term = self.material[int(floor(i/2))][1][0]
-                self.cards[i].fontSurf = self.font.render(self.cards[i].term, True, (0,0,0))
-        
+                self.cards[i].fontSurf = get_font_surf(self.font, self.cards[i].term, 100, True, (0,0,0), (75,200,75))
         
     
     def process_events(self):
