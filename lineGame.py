@@ -1,6 +1,7 @@
 
 import pygame
 from random import shuffle
+from random import randint
 from miniGame import MiniGame
 
 #Global Variables
@@ -81,11 +82,14 @@ class LineGame(MiniGame):
         self.linesWrong = []
         self.currentLine = False
         self.mousePressed = False
-        horizontalPositionsQ = [(QABORDER+i*self.screenSize[0]/len(self.material)) for i in range(len(self.material))]
-        horizontalPositionsA = [(QABORDER+i*self.screenSize[0]/len(self.material)) for i in range(len(self.material))]
+        horizontalPositionsQ = [(2*QABORDER+i*self.screenSize[0]/len(self.material)) for i in range(len(self.material))]
+        horizontalPositionsA = [(2*QABORDER+i*self.screenSize[0]/len(self.material)) for i in range(len(self.material))]
         shuffle(horizontalPositionsQ)
         shuffle(horizontalPositionsA)
-        self.qas = [QA(self.material[num][0],self.material[num][1],(horizontalPositionsQ[num],screenSize[0]/3),(horizontalPositionsA[num],screenSize[0]*2/3)) for num in range(len(self.material))]
+        self.qas = [QA(self.material[num][0],\
+        self.material[num][1],\
+        (horizontalPositionsQ[num],(-32+64*( ((horizontalPositionsQ[num]-2*QABORDER)*len(self.material)/self.screenSize[0])%2 ))+screenSize[1]/3),\
+        (horizontalPositionsA[num],(-32+64*( ((horizontalPositionsA[num]-2*QABORDER)*len(self.material)/self.screenSize[0])%2 ))+screenSize[1]*2/3)) for num in range(len(self.material))]
         
         #make list of QA's, pass to lines
         
