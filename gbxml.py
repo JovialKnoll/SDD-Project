@@ -76,10 +76,10 @@ def filterFiles(files, path = ""):
 #download("lol.txt")
 #upload("example.xml")
 
-list = listRemoteXMLFiles()
-print list
-list = listLocalXMLFiles()
-print list
+#list = listRemoteXMLFiles()
+#print list
+#list = listLocalXMLFiles()
+#print list
 
 #data = [("Question 1?", ["bla1", "lah1", "lol1"]), ("Question 2?", ["bla2", "lah2", "lol2"])]
 #saveXML(data)
