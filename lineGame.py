@@ -45,7 +45,7 @@ class QA(object):
         screen.blit(self.imageA, (self.rectA[0]+QABORDER, self.rectA[1]+QABORDER))
 
 class Line(object):
-    def __init__(self, startPos, listQA, points):
+    def __init__(self, startPos, listQA):
         """StartPos should be a tuple of x and y position."""
         self.startPos = startPos
         self.endPos = startPos
@@ -90,7 +90,7 @@ class Line(object):
 class LineGame(MiniGame):
     def __init__(self, screenSize, material):
         MiniGame.__init__(self, screenSize, material)
-        self.points = 0
+        self.score = 0
         self.linesWrong = []
         self.currentLine = False
         self.mousePressed = False
@@ -111,17 +111,16 @@ class LineGame(MiniGame):
                     run = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if not self.mousePressed:
-                    self.currentLine = Line(pygame.mouse.get_pos(),self.qas,self.points)
+                    self.currentLine = Line(pygame.mouse.get_pos(),self.qas)
                     self.mousePressed = True
             if event.type == pygame.MOUSEBUTTONUP:
                 if self.mousePressed:
                     self.currentLine.done = True
-                    self.points += self.currentLine.checkCorrect()
+                    self.score += self.currentLine.checkCorrect()
                     self.mousePressed = False
         return run
                     
     def update(self):
-        pygame.display.set_caption("Score: " + str(self.points))
         MiniGame.update(self)
         self.linesWrong = [l for l in self.linesWrong if l.update() != 3]
                 
@@ -133,6 +132,7 @@ class LineGame(MiniGame):
             elif temp == 2:
                 self.linesWrong.append(self.currentLine)
                 self.currentLine = False
+        pygame.display.set_caption("Score: " + str(self.score))
                 
     def draw(self, screen):
         pygame.draw.rect(screen, (160,160,160), (0,0,screen.get_width(),screen.get_height()))
@@ -145,4 +145,4 @@ class LineGame(MiniGame):
             self.currentLine.draw(screen)
     
     def get_score(self):
-        return self.points
+        return self.score

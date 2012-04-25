@@ -61,9 +61,10 @@ class InvadersGame(MiniGame):
         else:
             if self.pointsMultiplier > 1:
                 self.pointsMultiplier -= 1
+        pygame.display.set_caption("Score: " + str(self.score))
     
     def draw(self, screen):
-        screen.blit(self.font.render(str(self.score), True, (0, 255, 0)), (5,5))
+        #screen.blit(self.font.render(str(self.score), True, (0, 255, 0)), (5,5))
         self.defender.draw(screen)
     
     def get_score(self):
