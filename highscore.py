@@ -21,18 +21,30 @@ def retrieveHighscores(game):
 		return rows
 		
 def addScore(game, score):
+	player = getPlayer()
+	
 	con = mdb.connect(host, username, password, databasename);
 		
 	with con:    
 
 		cur = con.cursor()
-		query = "INSERT INTO highscores (game, user, score) VALUES ('" + game + "', '" + "player" + "', '" + score + "')"
+		
+		query = "INSERT INTO highscores (game, user, score) VALUES (%(game)s, %(user)s, %(score)s)"
+		data = {
+			'game' : game,
+			'user' : player,
+			'score' : score
+		}
 		#print query
-		cur.execute(query)
+		cur.execute(query, data)
 		
 		#print "Number of rows updated: %d" % cur.rowcount
 
-#addScore("example.xml", "bran", "3000")
+def getPlayer():
+	text = open('player.txt', 'r').read()
+	return text
+		
+#addScore("example.xml", "3000")
 #highscores = retrieveHighscores("example.xml")
 #for highscore in highscores:
 #	print highscore
