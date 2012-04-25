@@ -2,7 +2,7 @@
 
 import wx
 
-import xmlWriter
+import gbxml
 
 class StudyGuideCreator(wx.Frame):
     
@@ -17,10 +17,15 @@ class StudyGuideCreator(wx.Frame):
         self.Centre()
     
     def init_ui(self):
-        self.main_panel = wx.Panel(self)
+        self.master_panel = wx.Panel(self)
+        self.main_panel = wx.Panel(self.master_panel)
+        self.save_panel = wx.Panel(self.master_panel)
         
         self.sizer = wx.BoxSizer()
         self.sizer.Add(self.main_panel, 1, wx.EXPAND)
+        self.sizer.Add(self.save_panel, 1, wx.EXPAND)
+        self.master_panel.SetSizer(self.sizer)
+        self.init_save_panel()
         
         self.vbox = wx.BoxSizer(wx.VERTICAL)
 
@@ -99,6 +104,24 @@ class StudyGuideCreator(wx.Frame):
         wx.EVT_BUTTON(self, 5, self.save)
         self.main_panel.SetSizer(self.vbox)
     
+    def init_save_panel(self):
+        self.saveVbox = wx.BoxSizer(wx.VERTICAL)
+        self.saveFileLabel = wx.StaticText(self.save_panel, label="Save file as:")
+        self.saveFileText = wx.TextCtrl(self.save_panel)
+        self.saveFileSaveButton = wx.Button(self.save_panel, 11, label="FileSave ")
+        wx.EVT_BUTTON(self, 11, self.save_as)
+        self.saveHbox1 = wx.BoxSizer(wx.HORIZONTAL)
+        self.saveHbox2 = wx.BoxSizer(wx.HORIZONTAL)
+        self.saveHbox3 = wx.BoxSizer(wx.HORIZONTAL)
+        self.saveHbox1.Add(self.saveFileLabel, 1, wx.ALL | wx.EXPAND, 10)
+        self.saveHbox2.Add(self.saveFileText, 1, wx.ALL | wx.EXPAND, 10)
+        self.saveHbox3.Add(self.saveFileSaveButton, 1, wx.ALL | wx.EXPAND, 10)
+        self.saveVbox.Add(self.saveHbox1, 1, wx.ALL | wx.EXPAND, 10)
+        self.saveVbox.Add(self.saveHbox2, 1, wx.ALL | wx.EXPAND, 10)
+        self.saveVbox.Add(self.saveHbox3, 1, wx.ALL | wx.EXPAND, 10)
+        self.save_panel.SetSizer(self.saveVbox)
+        self.save_panel.Hide()
+    
     def _add_term(self, event):
         #print "Added term: " + self.text_term.GetValue() + " with definition: " + self.text_definition.GetValue()
         self.termList.append(self.text_term.GetValue())
@@ -144,8 +167,16 @@ class StudyGuideCreator(wx.Frame):
         self.term_listBox.Set([self.termList[i] + " = " + self.defList[i][0] for i in range(0, len(self.termList))])
         
     def save(self, event):
+        self.main_panel.Hide()
+        self.save_panel.Show()
+        self.sizer.Layout()
+    
+    def save_as(self, event):
         data = [(self.termList[i], self.defList[i]) for i in range(0, len(self.termList))]
-        xmlWriter.saveXML(data)
+        gbxml.saveXML(data, self.saveFileText.GetValue())
+        self.save_panel.Hide()
+        self.main_panel.Show()
+        self.sizer.Layout()
     
     """
     def _on_key_down(self, event):
