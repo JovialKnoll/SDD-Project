@@ -9,6 +9,7 @@ from flipGame import FlipGame
 from guideLoader import GuideLoader
 from SGDownloader import SGDownloader
 from scoreScreen import ScoreScreen
+from invadersGame import InvadersGame
 
 random.seed()
 #Global Variables
@@ -275,8 +276,10 @@ class Game(object):
         elif id == 1:
             self.miniGame = FlipGame(screenSize, self.guideData)
         elif id == 2:
-            self.guideMenu = GuideLoader(screenSize)
+            self.miniGame = InvadersGame(screenSize, self.guideData)
         elif id == 3:
+            self.guideMenu = GuideLoader(screenSize)
+        elif id == 4:
             self.downloadMenu = SGDownloader(screenSize)
         else:
             self.createGUI()

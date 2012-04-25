@@ -60,7 +60,6 @@ class SGDownloader(object):
         self.sprite = pygame.image.load("gfx/guideLoader.png").convert_alpha()
         self.screenSize = screenSize
         self.files = listRemoteXMLFiles()
-        print self.files
         self.selectionIndex = -1
         self.loadSuccess = False
         self.loadPopup = False
@@ -72,11 +71,9 @@ class SGDownloader(object):
             else:
                 self.lineItems.append(LineItem((self.rect.topleft[0], self.rect.topleft[1] +  self.__lineItemOffset * i + self.__separationLine),
                 self.files[i], (self.__res[0], self.__lineItemOffset), i))
-        print self.lineItems
                 
     def update(self):
         if self.selectionIndex > -1:
-            #self.data = loadXML(self.files[self.selectionIndex])
             self.loadSuccess = download(self.files[self.selectionIndex])    
             self.selectionIndex = -1
             self.loadPopup = LoaderPopup((self.screenSize[0]/2 - self.__popup_res[0]/2, self.screenSize[1]/2 - self.__popup_res[1]/2), self.__popup_res, self.loadSuccess)

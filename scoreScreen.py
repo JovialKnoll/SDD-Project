@@ -3,6 +3,7 @@ import pygame
 
 class Button(object):
     
+    __offsets = (10, 3)
     
     def __init__(self, pos, text, res, id):
         """One button for choosing things"""
@@ -14,7 +15,7 @@ class Button(object):
         
     def draw(self, screen):
         screen.blit(self.sprite, (self.rect.left, self.rect.top), self.sprite.get_rect())
-        screen.blit(self.fontSurf, (self.rect.left, self.rect.top), self.fontSurf.get_rect())
+        screen.blit(self.fontSurf, (self.rect.left + self.__offsets[self.id], self.rect.top + self.rect.height / 2.0 - self.fontSurf.get_rect().height / 2.0), self.fontSurf.get_rect())
         
     def clickCheck(self, pos):
         return self.rect.collidepoint(pos)
