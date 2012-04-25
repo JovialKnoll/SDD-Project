@@ -29,7 +29,7 @@ def addScore(game, user, score):
 		
 		#print "Number of rows updated: %d" % cur.rowcount
 
-addScore("example.xml", "bran", "3000")
-highscores = retrieveHighscores("example.xml")
-for highscore in highscores:
-	print highscore
+#addScore("example.xml", "bran", "3000")
+#highscores = retrieveHighscores("example.xml")
+#for highscore in highscores:
+#	print highscore
