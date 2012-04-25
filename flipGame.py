@@ -137,3 +137,6 @@ class FlipGame(MiniGame):
                 self.itemsFlipped = []
         elif len(self.itemsFlipped) > 0 and self.itemsFlipped[0] == card:
             self.itemsFlipped.remove(card)
+    
+    def get_score(self):
+        return self.score

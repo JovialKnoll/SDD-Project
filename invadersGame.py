@@ -9,9 +9,10 @@ class InvadersGame(MiniGame):
         self.questions = [self.make_question(i) for i in range(len(self.materialCopy))]
         self.questionNum = 0
         random.shuffle(self.questions)
-        print self.questions
         self.font = pygame.font.Font(pygame.font.get_default_font(), 12)
         self.defender = Defender(self.font, self.screenSize)
+        self.score = 0
+        self.pointsMultiplier = 255
         
     def make_question(self, x):
         question = (self.materialCopy[x][0], [], x) #term, 4 possible definitions in a random order, the index of the term in material
@@ -39,18 +40,34 @@ class InvadersGame(MiniGame):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     run = False
-        if self.defender.is_complete() and self.questionNum > len(self.questions):
+            self.defender.process_event(event)
+        if self.defender.is_complete() and self.questionNum >= len(self.questions):
             run = False
         return run
     
     def update(self):
-        if not self.defender.update():
+        checkDefender = self.defender.update()
+        if checkDefender != 0:
+            multiplier = self.pointsMultiplier
+            if checkDefender < 0:
+                multiplier = 0
+            self.score += ((self.pointsMultiplier + 127) * checkDefender)/25
+        if self.defender.is_complete():
+            if self.questionNum >= len(self.questions):
+                return
             self.defender.set_question(self.questions[self.questionNum], self.materialCopy[self.questions[self.questionNum][2]][1][0])
             self.questionNum += 1
-        self.defender.update()
+            self.pointsMultiplier = 255
+        else:
+            if self.pointsMultiplier > 1:
+                self.pointsMultiplier -= 1
     
     def draw(self, screen):
+        screen.blit(self.font.render(str(self.score), True, (0, 255, 0)), (5,5))
         self.defender.draw(screen)
+    
+    def get_score(self):
+        return self.score
 
 def getMaterial():
     return [("apple", ["une pomme", "un apple"]), ("banana", ["une banane", "un ananas"]), ("potato", ["une pomme de terre"]), ("grapefruit", ["un pamplemousse"]), ("orange", ["une orange"]), ("pineapple", ["un ananas", "une anana", "un pinapple", "une pomme de terre", "un apple"])]
