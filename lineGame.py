@@ -82,10 +82,9 @@ class LineGame(MiniGame):
         self.linesWrong = []
         self.currentLine = False
         self.mousePressed = False
-
         
-        positionQ = [(2*QABORDER+num*self.screenSize[0]/len(self.material),64*(num%2)-32+screenSize[1]/3) for num in range(len(self.material))]
-        positionA = [(2*QABORDER+num*self.screenSize[0]/len(self.material),64*(num%2)-32+screenSize[1]*2/3) for num in range(len(self.material))]
+        positionQ = [(2*QABORDER+(num%2)*self.screenSize[0]/2 + (num%8)*16,64*(num/2)+16) for num in range(len(self.material))]
+        positionA = [(2*QABORDER+(num%2)*self.screenSize[0]/2 + (num%8)*16,screenSize[1]/2+64*(num/2)+16) for num in range(len(self.material))]
         shuffle(positionQ)
         shuffle(positionA)
         
