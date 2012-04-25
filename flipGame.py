@@ -66,20 +66,27 @@ class Card(object):
     
     def update_hide(self):
         self.hide = self.hideWhenDone
+    
+    def finished(self):
+        return self.hide and not self.flipping > 0
         
 class FlipGame(MiniGame):
     def __init__(self, screenSize, material):
         MiniGame.__init__(self, screenSize, material)
         self.cardSurface = pygame.Surface((100, 100))
         self.cardSurface.fill((75, 200, 75))
+        self.rowWidth = screenSize[0] / 150
+        self.rowHeight = (screenSize[1] - 15)/ 150
+        maxLength = ((self.rowWidth * self.rowHeight) / 2)  #max number of card pairs displayed on one screen
         if not material:
             self.material = [("Spongebob", ["Squarepants"]), ("Patrick", ["Star"]), ("Squidward", ["Tentacles"])]
         else:
             self.material = material
-        self.cards = [Card(((i%5)*150, floor(i/5) * 150 + 150)) for i in range(0, len(self.material) * 2)]
+        self.cards = [Card(((i%self.rowWidth)*150, floor(i/5) * 150 + 15)) for i in range(0, min(len(self.material), maxLength) * 2)]
         self.font = pygame.font.Font(pygame.font.get_default_font(), 12)
         self.itemsFlipped = []
         self.score = 0
+        self.scoreMultiplier = len(self.cards) * 100
         random.shuffle(self.cards)
         for i in range(len(self.cards)):
             if i%2 == 0:
@@ -92,7 +99,13 @@ class FlipGame(MiniGame):
         
     
     def process_events(self):
-        run = True
+        run = False
+        for card in self.cards:
+            if not card.finished():
+                run = True
+                break
+        else:
+            print self.scoreMultiplier
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
@@ -109,7 +122,9 @@ class FlipGame(MiniGame):
     def update(self):
         for card in self.cards:
             card.update()
-        pygame.display.set_caption("Score: " + str(self.score))
+        if self.scoreMultiplier > 1:
+            self.scoreMultiplier -= 1
+        pygame.display.set_caption("Score: " + str(self.score * (self.scoreMultiplier + len(self.cards)*100)/(len(self.cards)*50)))
     
     def draw(self, screen):
         for card in self.cards:
@@ -140,4 +155,4 @@ class FlipGame(MiniGame):
             self.itemsFlipped.remove(card)
     
     def get_score(self):
-        return self.score
+        return (self.score * (self.scoreMultiplier + len(self.cards)*100)/(len(self.cards)*50))
