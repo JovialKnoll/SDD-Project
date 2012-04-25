@@ -87,7 +87,7 @@ class LineGame(MiniGame):
         shuffle(horizontalPositionsQ)
         shuffle(horizontalPositionsA)
         self.qas = [QA(self.material[num][0],\
-        self.material[num][1],\
+        self.material[num][1][0],\
         (horizontalPositionsQ[num],(-32+64*( ((horizontalPositionsQ[num]-2*QABORDER)*len(self.material)/self.screenSize[0])%2 ))+screenSize[1]/3),\
         (horizontalPositionsA[num],(-32+64*( ((horizontalPositionsA[num]-2*QABORDER)*len(self.material)/self.screenSize[0])%2 ))+screenSize[1]*2/3)) for num in range(len(self.material))]
         

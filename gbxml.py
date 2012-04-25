@@ -55,10 +55,15 @@ def listRemoteXMLFiles():
     return list
 
 def download(file):
+    success = True
     ftp = FTP("tothemathmos.com")
     ftp.login("gigabright", "learningisfun")
-    ftp.retrbinary("RETR " + file, open("xml/" + file, 'wb').write)
+    try:
+        ftp.retrbinary("RETR " + file, open("xml/" + file, 'wb').write)
+    except:
+        success = False
     ftp.quit()
+    return success
 	
 def upload(file):
     ftp = FTP("tothemathmos.com")

@@ -10,7 +10,7 @@ class LineItem(object):
         """One study guide line item"""
         self.rect = pygame.Rect(pos, res)
         self.font = pygame.font.SysFont("Courier", 20)
-        temp = text.replace("./xml/", "")
+        temp = text.replace("xml/", "")
         self.fontSurf = self.font.render(temp, False, (0,0,0))
         self.sprite = pygame.image.load("gfx/lineItem.png").convert_alpha()
         self.id = id
@@ -58,10 +58,10 @@ class GuideLoader(object):
         self.sprite = pygame.image.load("gfx/guideLoader.png").convert_alpha()
         self.screenSize = screenSize
         
-        self.files = listXMLFiles()
+        self.files = listLocalXMLFiles()
         self.selectionIndex = -1
         self.data = False
-        self.guideLoaded = False
+        self.loadSuccess = False
         self.loadPopup = False
         
         self.lineItems = []
@@ -77,9 +77,9 @@ class GuideLoader(object):
         if self.selectionIndex > -1:
             self.data = loadXML(self.files[self.selectionIndex])
             if self.data:
-                self.guideLoaded = True
+                self.loadSuccess = True
             self.selectionIndex = -1
-            self.loadPopup = LoaderPopup((self.screenSize[0]/2 - self.__popup_res[0]/2, self.screenSize[1]/2 - self.__popup_res[1]/2), self.__popup_res, self.guideLoaded)
+            self.loadPopup = LoaderPopup((self.screenSize[0]/2 - self.__popup_res[0]/2, self.screenSize[1]/2 - self.__popup_res[1]/2), self.__popup_res, self.loadSuccess)
             
             
         

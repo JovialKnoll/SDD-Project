@@ -7,6 +7,7 @@ from miniGame import MiniGame
 from lineGame import LineGame
 from flipGame import FlipGame
 from guideLoader import GuideLoader
+from SGDownloader import SGDownloader
 
 random.seed()
 #Global Variables
@@ -60,7 +61,10 @@ class LoaderBox(object):
     
     def __init__(self, pos, id, rotation = 0):
         """Create a box to load a menu/game."""
-        self.rect = pygame.Rect((0,0), self.__res)
+        if rotation == 90 or rotation == 270:
+            self.rect = pygame.Rect((0,0), (self.__res[1], self.__res[0]))
+        else:
+            self.rect = pygame.Rect((0,0), self.__res)
         self.setPos(pos)
         self.sprite = pygame.image.load("gfx/loaderBox.png").convert_alpha()
         self.rotation = rotation
@@ -109,8 +113,9 @@ class Game(object):
         self.avatar = False
         self.createGUI()
         self.guideMenu = False
-        
         self.guideData = []
+        
+        self.downloadMenu = False
         
         #lots of other stuff will be needed, of course
         
@@ -167,6 +172,10 @@ class Game(object):
                 print self.guideData
                 self.guideMenu = False
                 self.createGUI()
+        elif self.downloadMenu:
+            if not self.downloadMenu.process_events():
+                self.downloadMenu = False
+                self.createGUI()
         else:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -205,6 +214,8 @@ class Game(object):
             self.miniGame.update()
         elif self.guideMenu:
             self.guideMenu.update()
+        elif self.downloadMenu:
+            self.downloadMenu.update()
         else:
             self.avatar.update(delta_time)
             for l in self.loaderBoxes:
@@ -220,6 +231,8 @@ class Game(object):
             self.miniGame.draw(self.screen)
         elif self.guideMenu:
             self.guideMenu.draw(self.screen)
+        elif self.downloadMenu:
+            self.downloadMenu.draw(self.screen)
         else:
             self.avatar.draw(self.screen)
             for l in self.loaderBoxes:
@@ -233,12 +246,17 @@ class Game(object):
         #self.avatar.setPos((self.avatar.getPos()[0] - self.avatar.getRes()[0] / 2, self.avatar.getPos()[1] - self.avatar.getRes()[1] / 2))
         if id == 0:
             #debug code
-            m = [("1+1","2"),("2+2","4"),("1+2","3"),("2+3","5"),("3+3","6"),("3+4","7"),("4+4","8"),("4+5","9")]
-            self.miniGame = LineGame(screenSize,m)
+            if not self.guideData:
+                m = [("1+1","2"),("2+2","4"),("1+2","3"),("2+3","5"),("3+3","6"),("3+4","7"),("4+4","8"),("4+5","9")]
+                self.miniGame = LineGame(screenSize,m)
+            else:
+                self.miniGame = LineGame(screenSize, self.guideData)
         elif id == 1:
             self.miniGame = FlipGame(screenSize, self.guideData)
         elif id == 2:
             self.guideMenu = GuideLoader(screenSize)
+        elif id == 3:
+            self.downloadMenu = SGDownloader(screenSize)
         else:
             self.createGUI()
         
