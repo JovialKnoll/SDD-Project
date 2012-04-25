@@ -26,7 +26,7 @@ def loadXML(filename):
             i += 1
     return data
 
-def saveXML(data):
+def saveXML(data, filename):
     tb = TreeBuilder()
     studyguide = tb.start("studyguide", {})
     
@@ -41,7 +41,7 @@ def saveXML(data):
             xmlAnswer.text = dataAnswer
             
     #dump(studyguide)
-    ElementTree(studyguide).write("new.xml")
+    ElementTree(studyguide).write(filename)
 
 def listLocalXMLFiles():
     path = "xml/"
