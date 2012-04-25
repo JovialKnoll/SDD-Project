@@ -34,7 +34,7 @@ class LoaderPopup(object):
         if loaded:
             self.fontSurf = self.font.render("Guide downloaded successfully.", False, (0,0,0))
         else:
-            self.fontSurf = self.font.render("Could not download selected file.", False, (0,0,0))
+            self.fontSurf = self.font.render("Failed download of selected file.", False, (0,0,0))
         self.sprite = pygame.image.load("gfx/loaderPopup.png").convert_alpha()
         
     def draw(self,screen):

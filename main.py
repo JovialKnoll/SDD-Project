@@ -8,6 +8,7 @@ from lineGame import LineGame
 from flipGame import FlipGame
 from guideLoader import GuideLoader
 from SGDownloader import SGDownloader
+from scoreScreen import ScoreScreen
 
 random.seed()
 #Global Variables
@@ -116,6 +117,7 @@ class Game(object):
         self.guideData = []
         
         self.downloadMenu = False
+        self.scoreScreen = False
         
         #lots of other stuff will be needed, of course
         
