@@ -20,13 +20,13 @@ def retrieveHighscores(game):
 		rows = cur.fetchall()
 		return rows
 		
-def addScore(game, user, score):
+def addScore(game, score):
 	con = mdb.connect(host, username, password, databasename);
 		
 	with con:    
 
 		cur = con.cursor()
-		query = "INSERT INTO highscores (game, user, score) VALUES ('" + game + "', '" + user + "', '" + score + "')"
+		query = "INSERT INTO highscores (game, user, score) VALUES ('" + game + "', '" + "player" + "', '" + score + "')"
 		#print query
 		cur.execute(query)
 		
