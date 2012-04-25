@@ -60,7 +60,7 @@ class Invader(object):
     def make_sprites(self):
         self.unitWidth = self.screenSize[0] / 7;
         self.unitHeight = self.unitWidth
-        return [self.make_sprite(self.answers[i], (i * self.unitWidth * 5/3 + self.unitWidth/2, 0)) for i in range(len(self.answers))]
+        return [self.make_sprite(self.answers[i], (i * self.unitWidth * 5/3 + self.unitWidth/2, 30)) for i in range(len(self.answers))]
     
     def make_sprite(self, text, position):
         image = pygame.Surface((self.unitWidth, self.unitHeight))
@@ -75,8 +75,6 @@ class Invader(object):
             i.move(dist*self.moveDir, 0)
         if self.sprites[0].past_edge(self.screenSize[0]) or self.sprites[len(self.sprites)-1].past_edge(self.screenSize[0]):
             self.moveDir *= -1
-            for i in self.sprites:
-                i.move(0, dist)
     
     def bullet_check(self, bullet):
         for i in range(len(self.sprites)):
