@@ -117,6 +117,8 @@ class Game(object):
         
         self.downloadMenu = False
         
+        self.lastScore = 0
+        
         #lots of other stuff will be needed, of course
         
         #debug stuff below
@@ -164,6 +166,7 @@ class Game(object):
         run = True
         if self.miniGame:
             if not self.miniGame.process_events():
+                self.lastScore = self.minigame.get_score()
                 self.miniGame = False
                 self.createGUI()
         elif self.guideMenu:
@@ -247,7 +250,14 @@ class Game(object):
         if id == 0:
             #debug code
             if not self.guideData:
-                m = [("1+1","2"),("2+2","4"),("1+2","3"),("2+3","5"),("3+3","6"),("3+4","7"),("4+4","8"),("4+5","9")]
+                m = [("Question Number 1",("Answer Number 1","Ans")),\
+                ("Question Number 2",("Answer Number 2","Ans")),\
+                ("Question Number 3",("Answer Number 3","Ans")),\
+                ("Question Number 4",("Answer Number 4","Ans")),\
+                ("Question Number 5",("Answer Number 5","Ans")),\
+                ("Question Number 6",("Answer Number 6","Ans")),\
+                ("Question Number 7",("Answer Number 7","Ans")),\
+                ("Question Number 8",("Answer Number 8","Ans"))]
                 self.miniGame = LineGame(screenSize,m)
             else:
                 self.miniGame = LineGame(screenSize, self.guideData)

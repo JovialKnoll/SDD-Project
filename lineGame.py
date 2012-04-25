@@ -29,6 +29,11 @@ class QA(object):
             self.done = True
             return True
         return False
+    
+    def touch(self, pos):
+        if (self.rectQ.collidepoint(pos) or self.rectA.collidepoint(pos)):
+            return True
+        return False
         
     def update(self):
         pass
@@ -55,7 +60,13 @@ class Line(object):
                 continue
             if qa.checkCorrect(self.startPos, self.endPos):
                 self.correct = True
-                break
+                return 15
+        for qa1 in self.listQA:
+            if qa1.touch(self.startPos):
+                for qa2 in self.listQA:
+                    if qa2.touch(self.endPos) and qa2 != qa1:
+                        return -5
+        return 0
         
     def update(self):
         if not self.done:
@@ -79,20 +90,15 @@ class Line(object):
 class LineGame(MiniGame):
     def __init__(self, screenSize, material):
         MiniGame.__init__(self, screenSize, material)
+        self.score = 0
         self.linesWrong = []
         self.currentLine = False
         self.mousePressed = False
-
-        
-        positionQ = [(2*QABORDER+num*self.screenSize[0]/len(self.material),64*(num%2)-32+screenSize[1]/3) for num in range(len(self.material))]
-        positionA = [(2*QABORDER+num*self.screenSize[0]/len(self.material),64*(num%2)-32+screenSize[1]*2/3) for num in range(len(self.material))]
+        positionQ = [(2*QABORDER+(num%2)*self.screenSize[0]/2 + (num%8)*16,64*(num/2)+16) for num in range(len(self.material))]
+        positionA = [(2*QABORDER+(num%2)*self.screenSize[0]/2 + (num%8)*16,screenSize[1]/2+64*(num/2)+16) for num in range(len(self.material))]
         shuffle(positionQ)
         shuffle(positionA)
-        
         self.qas = [QA(self.material[i][0],self.material[i][1][0],positionQ[i],positionA[i]) for i in range(len(self.material))]
-        
-
-        
         #make list of QA's, pass to lines
         
     def process_events(self):
@@ -110,7 +116,7 @@ class LineGame(MiniGame):
             if event.type == pygame.MOUSEBUTTONUP:
                 if self.mousePressed:
                     self.currentLine.done = True
-                    self.currentLine.checkCorrect()
+                    self.score += self.currentLine.checkCorrect()
                     self.mousePressed = False
         return run
                     
@@ -126,6 +132,7 @@ class LineGame(MiniGame):
             elif temp == 2:
                 self.linesWrong.append(self.currentLine)
                 self.currentLine = False
+        pygame.display.set_caption("Score: " + str(self.score))
                 
     def draw(self, screen):
         pygame.draw.rect(screen, (160,160,160), (0,0,screen.get_width(),screen.get_height()))
@@ -136,3 +143,6 @@ class LineGame(MiniGame):
             l.draw(screen)
         if not (self.currentLine == False):
             self.currentLine.draw(screen)
+    
+    def get_score(self):
+        return self.score
