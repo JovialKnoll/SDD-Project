@@ -168,8 +168,13 @@ class Game(object):
         run = True
         if self.miniGame:
             if not self.miniGame.process_events():
-                self.lastScore = self.minigame.get_score()
+                self.lastScore = self.miniGame.get_score()
                 self.miniGame = False
+                self.scoreScreen = ScoreScreen(screenSize, self.lastScore)
+                #self.createGUI()
+        elif self.scoreScreen:
+            if not self.scoreScreen.process_events():
+                self.scoreScreen = False
                 self.createGUI()
         elif self.guideMenu:
             if not self.guideMenu.process_events():
@@ -217,6 +222,8 @@ class Game(object):
         
         if self.miniGame:
             self.miniGame.update()
+        elif self.scoreScreen:
+            self.scoreScreen.update()
         elif self.guideMenu:
             self.guideMenu.update()
         elif self.downloadMenu:
@@ -234,6 +241,8 @@ class Game(object):
         pygame.draw.rect(self.screen, (0,0,0), (0,0,screenSize[0],screenSize[1]))
         if self.miniGame:
             self.miniGame.draw(self.screen)
+        elif self.scoreScreen:
+            self.scoreScreen.draw(self.screen)
         elif self.guideMenu:
             self.guideMenu.draw(self.screen)
         elif self.downloadMenu:

@@ -35,13 +35,13 @@ class ScoreScreen(object):
         self.sprite = pygame.image.load("gfx/scoreScreen.png").convert_alpha()
         self.font = pygame.font.SysFont("Courier", 32)
         self.fontSurf = self.font.render("YOUR SCORE THIS GAME WAS", False, (0,0,0))
-        #self.scoreSurf = self.font.render(score, False, (0,0,0))
+        self.scoreSurf = self.font.render(str(score), False, (0,0,0))
         
         self.selectionIndex = -1
         self.buttons = []
         
         self.buttons.append(Button((self.rect.topleft[0] + self.__button_offset, self.rect.topleft[1] + self.__res[1] * 2.0 / 3.0), "Upload", self.__button_res, 0))
-        self.buttons.append(Button((self.rect.topright[0] - self.__button_offset, self.rect.topleft[1] + self.__res[1] * 2.0 / 3.0), "Continue", self.__button_res, 0))
+        self.buttons.append(Button((self.rect.topright[0] - self.__button_offset - self.__button_res[0], self.rect.topleft[1] + self.__res[1] * 2.0 / 3.0), "Continue", self.__button_res, 0))
         
         
     def update(self):
@@ -56,9 +56,9 @@ class ScoreScreen(object):
     
     def draw(self, screen):
         screen.blit(self.sprite, (self.rect.left, self.rect.top), self.sprite.get_rect())
-        screen.blit(self.fontSurf, (self.rect.right / 2, self.rect.bottom / 2), self.fontSurf.get_rect())
-        #screen.blit(self.scoreSurf, (self.rect.right / 2, (self.rect.bottom / 2) + self.__button_offset), self.scoreSurf.get_rect())
-        for b in self.buttons
+        screen.blit(self.fontSurf, (self.rect.right / 2 - self.fontSurf.get_rect().width / 2.0, self.rect.bottom / 2), self.fontSurf.get_rect())
+        screen.blit(self.scoreSurf, (self.rect.right / 2 - self.scoreSurf.get_rect().width / 2.0, (self.rect.bottom / 2) + self.fontSurf.get_rect().height), self.scoreSurf.get_rect())
+        for b in self.buttons:
             b.draw(screen)
         
     def process_events(self):
