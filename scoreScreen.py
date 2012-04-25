@@ -39,9 +39,10 @@ class ScoreScreen(object):
         
         self.selectionIndex = -1
         self.buttons = []
+        self.done = False
         
         self.buttons.append(Button((self.rect.topleft[0] + self.__button_offset, self.rect.topleft[1] + self.__res[1] * 2.0 / 3.0), "Upload", self.__button_res, 0))
-        self.buttons.append(Button((self.rect.topright[0] - self.__button_offset - self.__button_res[0], self.rect.topleft[1] + self.__res[1] * 2.0 / 3.0), "Continue", self.__button_res, 0))
+        self.buttons.append(Button((self.rect.topright[0] - self.__button_offset - self.__button_res[0], self.rect.topleft[1] + self.__res[1] * 2.0 / 3.0), "Continue", self.__button_res, 1))
         
         
     def update(self):
@@ -49,8 +50,7 @@ class ScoreScreen(object):
             #upload
             pass
         elif self.selectionIndex == 1:
-            #do nothing, kill the screen
-            pass
+            self.done = True
             
             
     
@@ -63,15 +63,18 @@ class ScoreScreen(object):
         
     def process_events(self):
         run = True
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                run = False
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
+        if self.done:
+            run = False
+        else:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
                     run = False
-            if event.type == pygame.MOUSEBUTTONUP:
-                for b in self.buttons:
-                        if(b.clickCheck(event.pos)):
-                            self.selectionIndex = b.getID()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        run = False
+                if event.type == pygame.MOUSEBUTTONUP:
+                    for b in self.buttons:
+                            if(b.clickCheck(event.pos)):
+                                self.selectionIndex = b.getID()
                         
         return run
