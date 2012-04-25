@@ -109,12 +109,13 @@ class FlipGame(MiniGame):
     def update(self):
         for card in self.cards:
             card.update()
+        pygame.display.set_caption("Score: " + str(self.score))
     
     def draw(self, screen):
         for card in self.cards:
             card.draw(screen, self.cardSurface)
-        scoresurf = self.font.render("Score: " + str(self.score) + " points", True, (50,250,50))
-        screen.blit(scoresurf, (50, 50), scoresurf.get_rect())
+        #scoresurf = self.font.render("Score: " + str(self.score) + " points", True, (50,250,50))
+        #screen.blit(scoresurf, (50, 50), scoresurf.get_rect())
     
     def flip_card(self, card):
         if card.flip():

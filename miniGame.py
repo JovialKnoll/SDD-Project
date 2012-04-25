@@ -35,3 +35,6 @@ class MiniGame(object):
         #you'll also need to draw other things that matter, of course
         for o in self.objects:
             o.draw(screen)
+    
+    def get_score(self):
+        return 0
