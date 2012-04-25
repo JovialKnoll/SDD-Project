@@ -117,6 +117,8 @@ class Game(object):
         
         self.downloadMenu = False
         
+        self.lastScore = 0
+        
         #lots of other stuff will be needed, of course
         
         #debug stuff below
@@ -164,6 +166,7 @@ class Game(object):
         run = True
         if self.miniGame:
             if not self.miniGame.process_events():
+                self.lastScore = self.minigame.get_score()
                 self.miniGame = False
                 self.createGUI()
         elif self.guideMenu:
