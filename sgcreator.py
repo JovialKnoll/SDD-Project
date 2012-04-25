@@ -10,6 +10,7 @@ class StudyGuideCreator(wx.Frame):
         super(StudyGuideCreator, self).__init__(parent, title=title, size=(700,560))
         self.termList = []
         self.defList = []
+        self.decoys = []
         
         self.init_ui()
         self.Show()
@@ -23,30 +24,48 @@ class StudyGuideCreator(wx.Frame):
         
         self.vbox = wx.BoxSizer(wx.VERTICAL)
 
-        #row 2
+        #row 2 is the save button
         self.hbox2 = wx.BoxSizer(wx.HORIZONTAL)
         self.button_save = wx.Button(self.main_panel, 5, label="Save Study Guide")
         self.hbox2.Add(self.button_save, 1, wx.EXPAND | wx.LEFT | wx.RIGHT, 70)
         
-        #row 1
+        #row 1 is the add term button
         self.hbox1 = wx.BoxSizer(wx.HORIZONTAL)
-        #self.image_title = wx.StaticBitmap(self.main_panel)
-        #self.image_title.SetBitmap(wx.Image("images/menu.png", wx.BITMAP_TYPE_PNG).Rescale(550,160).ConvertToBitmap())
-        #self.image_title = wx.Image("images/menu.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        #self.join_panel.setBitmap(wx.Image("images/menu.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap())
-        #self.label_title = wx.StaticText(self.join_panel, label="Rezolution")
-        #self.label_title.SetFont(wx.Font(20, wx.FONTFAMILY_ROMAN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
         self.button_add = wx.Button(self.main_panel, 2, label="Add Term")
-        #self.join_hbox1.Add(self.image_title, 0, wx.TOP | wx.LEFT | wx.EXPAND, 0)
         self.hbox1.Add(self.button_add, 1, wx.EXPAND | wx.LEFT | wx.RIGHT, 70)
         
-        #row 4
+        #row 3 is the labels for term and definition textboxes
+        self.hbox3 = wx.BoxSizer(wx.HORIZONTAL)
+        self.label_term = wx.StaticText(self.main_panel, label="Term/Question:")
+        self.label_definition = wx.StaticText(self.main_panel, label="Definition/Answer:")
+        self.hbox3.Add(self.label_term, 2, wx.RIGHT, 50)
+        self.hbox3.Add(self.label_definition, 3, wx.RIGHT, 50)
+        
+        #row 4 is the textboxes for term and definition
         self.hbox4 = wx.BoxSizer(wx.HORIZONTAL)
         self.text_term = wx.TextCtrl(self.main_panel)
         #self.text_term.setDefaultStyle(wxTE_PROCESS_ENTER)
         self.text_definition = wx.TextCtrl(self.main_panel)
         self.hbox4.Add(self.text_term, 2, wx.RIGHT, 50)
         self.hbox4.Add(self.text_definition, 3, wx.RIGHT, 50)
+        
+        #row 5 is the textbox for decoy answers
+        self.vbox5 = wx.BoxSizer(wx.VERTICAL)
+        self.hbox5a = wx.BoxSizer(wx.HORIZONTAL)
+        self.hbox5b = wx.BoxSizer(wx.HORIZONTAL)
+        self.label_decoy = wx.StaticText(self.main_panel, label="Decoy Answers:")
+        self.text_decoy = wx.TextCtrl(self.main_panel)
+        self.button_add_decoy = wx.Button(self.main_panel, 8, label="Add Decoy")
+        wx.EVT_BUTTON(self, 8, self._add_decoy)
+        self.button_rem_decoy = wx.Button(self.main_panel, 9, label="Remove Decoy")
+        wx.EVT_BUTTON(self, 9, self._rem_decoy)
+        self.decoy_listBox = wx.ListBox(self.main_panel, id=10)
+        self.hbox5a.Add(self.label_decoy, 2, wx.RIGHT, 50)
+        self.hbox5a.Add(self.text_decoy, 3, wx.RIGHT, 50)
+        self.vbox5.Add(self.button_add_decoy, 1, wx.ALL | wx.EXPAND, 5)
+        self.vbox5.Add(self.button_rem_decoy, 1, wx.ALL | wx.EXPAND, 5)
+        self.hbox5b.Add(self.vbox5, 2, wx.ALL | wx.EXPAND, 10)
+        self.hbox5b.Add(self.decoy_listBox, 3, wx.ALL | wx.EXPAND, 10)
         
         #row 6
         self.vbox6 = wx.BoxSizer(wx.VERTICAL)
@@ -66,26 +85,26 @@ class StudyGuideCreator(wx.Frame):
         self.hbox6.Add(self.term_listBox, 3, wx.TOP | wx.RIGHT | wx.EXPAND, 10)
         
         
-        #rack em up
-        self.vbox.Add(self.hbox2, 1, wx.ALL | wx.EXPAND, 10)
+        #assemble the rows
+        self.vbox.Add(self.hbox2, 0, wx.ALL | wx.EXPAND, 10)
         self.vbox.Add(self.hbox1, 0, wx.ALL | wx.EXPAND, 10)
+        self.vbox.Add(self.hbox3, 0, wx.TOP | wx.LEFT | wx.RIGHT | wx.EXPAND, 10)
         self.vbox.Add(self.hbox4, 0, wx.ALL | wx.EXPAND, 10)
+        self.vbox.Add(self.hbox5a, 0, wx.ALL | wx.EXPAND, 10)
+        self.vbox.Add(self.hbox5b, 3, wx.ALL | wx.EXPAND, 10)
         self.vbox.Add(self.hbox6, 7, wx.ALL | wx.EXPAND, 10)
         
-        #Interactivtize me baby
+        #button events
         wx.EVT_BUTTON(self, 2, self._add_term)
         wx.EVT_BUTTON(self, 5, self.save)
-        #wx.EVT_TEXT_ENTER(self, 3, self._add_term)
-        #self.main_panel.Bind(wx.EVT_KEY_DOWN, self._on_key_down)
-        #self.text_definition.Bind(wx.EVT_KEY_DOWN, self._on_key_down)
-        #wx.EVT_KEY_DOWN(self, 2, self._on_key_down)
         self.main_panel.SetSizer(self.vbox)
     
     def _add_term(self, event):
         #print "Added term: " + self.text_term.GetValue() + " with definition: " + self.text_definition.GetValue()
         self.termList.append(self.text_term.GetValue())
-        self.defList.append(self.text_definition.GetValue())
+        self.defList.append(self._combine_definitions())
         self.update_list()
+        self.update_decoy_list()
     
     def _delete_element(self, event):
         self.termList.pop(self.term_listBox.GetSelection())
@@ -94,18 +113,38 @@ class StudyGuideCreator(wx.Frame):
     
     def _change_element(self, event):
         self.termList[self.term_listBox.GetSelection()] = self.text_term.GetValue()
-        self.defList[self.term_listBox.GetSelection()] = self.text_definition.GetValue()
+        self.defList[self.term_listBox.GetSelection()] = self._combine_definitions()
         self.update_list()
+        self.update_decoy_list()
     
     def _term_selected(self, event):
         self.text_term.SetValue(self.termList[self.term_listBox.GetSelection()])
-        self.text_definition.SetValue(self.defList[self.term_listBox.GetSelection()])
+        self.text_definition.SetValue(self.defList[self.term_listBox.GetSelection()][0])
+        self.decoys = [self.defList[self.term_listBox.GetSelection()][i] for i in range(1,len(self.defList[self.term_listBox.GetSelection()]))]
+        self.update_decoy_list()
+    
+    def _add_decoy(self, event):
+        self.decoys.append(self.text_decoy.GetValue())
+        self.update_decoy_list()
+    
+    def _rem_decoy(self, event):
+        self.decoys.pop(self.decoy_listBox.GetSelection())
+        self.update_decoy_list()
+    
+    def _combine_definitions(self):
+        result = [self.text_definition.GetValue()]
+        for i in self.decoys:
+            result.append(i)
+        return result
+    
+    def update_decoy_list(self):
+        self.decoy_listBox.Set(self.decoys)
     
     def update_list(self):
-        self.term_listBox.Set([self.termList[i] + " = " + self.defList[i] for i in range(0, len(self.termList))])
+        self.term_listBox.Set([self.termList[i] + " = " + self.defList[i][0] for i in range(0, len(self.termList))])
         
     def save(self, event):
-        data = [(self.termList[i], [self.defList[i]]) for i in range(0, len(self.termList))]
+        data = [(self.termList[i], self.defList[i]) for i in range(0, len(self.termList))]
         xmlWriter.saveXML(data)
     
     """
