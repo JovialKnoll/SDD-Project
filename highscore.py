@@ -4,9 +4,13 @@
 import MySQLdb as mdb
 import sys
 
+host = "tothemathmos.com"
+username = "gigabright"
+password = "learningisfun"
+databasename = "gigabright"
+
 def retrieveHighscores(game):
-	con = mdb.connect('localhost', 'root', 
-			'', 'gigabright');
+	con = mdb.connect(host, username, password, databasename);
 
 	with con: 
 
@@ -17,8 +21,7 @@ def retrieveHighscores(game):
 		return rows
 		
 def addScore(game, user, score):
-	con = mdb.connect('localhost', 'root', 
-		'', 'gigabright')
+	con = mdb.connect(host, username, password, databasename);
 		
 	with con:    
 
