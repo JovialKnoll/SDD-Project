@@ -52,26 +52,28 @@ class HighscoresList(object):
     __lineItemRes = (600, 20)
     __button_res = (100,75)
     __separationLine = 5
+    __max_line_num = 10
     
     
     def __init__(self, screenSize, game):
+        """Lists highscores for a given game"""
         self.rect = pygame.Rect(((screenSize[0] - self.__res[0]) / 2, (screenSize[1] - self.__res[1]) / 2), self.__res)
         self.sprite = pygame.image.load("gfx/scoreScreen.png").convert_alpha()
         self.font = pygame.font.SysFont("Courier", 32)
         self.fontSurf = self.font.render("HIGHSCORES", False, (0,0,0))
-        #self.scoreSurf = self.font.render(str(score), False, (0,0,0))
         
         self.screenSize = screenSize
         self.game = game
         
+        #get scores from server
         self.scores = retrieveHighscores(self.game)
-        #print self.scores
         self.button = Button((self.rect.right / 2.0 - self.__button_res[0] / 2.0, self.rect.bottom - self.__res[1] * 1.0/15.0 - self.__button_res[1]), "Done", self.__button_res, 0)
         
+        #create lines for each score; max of 10 items
         self.lineItems = []
         maxItems = 0
-        if len(self.scores) > 10:
-            maxItems = 10
+        if len(self.scores) > self.__max_line_num:
+            maxItems = self.__max_line_num
         else:
             maxItems = len(self.scores)
         for i in range(0, maxItems):

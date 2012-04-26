@@ -27,6 +27,7 @@ class Button(object):
 class ScorePopup(object):
     
     def __init__(self, pos, res, loaded):
+        """Defines the success/fail of the operation"""
         self.rect = pygame.Rect(pos, res)
         self.font = pygame.font.SysFont("Courier", 16)
         if loaded:
@@ -53,6 +54,7 @@ class ScoreScreen(object):
     
     
     def __init__(self, screenSize, game, score):
+        """Creates a screen to display the score just recieved"""
         self.rect = pygame.Rect(((screenSize[0] - self.__res[0]) / 2, (screenSize[1] - self.__res[1]) / 2), self.__res)
         self.sprite = pygame.image.load("gfx/scoreScreen.png").convert_alpha()
         self.font = pygame.font.SysFont("Courier", 32)
@@ -68,6 +70,7 @@ class ScoreScreen(object):
         self.done = False
         self.scorePopup = False
         
+        #buttons for uploading or continuing
         self.buttons.append(Button((self.rect.topleft[0] + self.__button_offset, self.rect.topleft[1] + self.__res[1] * 2.0 / 3.0), "Upload", self.__button_res, 0))
         self.buttons.append(Button((self.rect.topright[0] - self.__button_offset - self.__button_res[0], self.rect.topleft[1] + self.__res[1] * 2.0 / 3.0), "Continue", self.__button_res, 1))
         

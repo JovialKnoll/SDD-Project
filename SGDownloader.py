@@ -29,6 +29,7 @@ class LineItem(object):
 class LoaderPopup(object):
     
     def __init__(self, pos, res, loaded):
+        """Defines the success/fail of the operation"""
         self.rect = pygame.Rect(pos, res)
         self.font = pygame.font.SysFont("Courier", 16)
         if loaded == -1:
