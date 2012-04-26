@@ -4,7 +4,7 @@ from highscore import retrieveHighscores
 
 class Button(object):
     
-    __offsets = (10, 3)
+    #__offsets = (10, 3)
     
     def __init__(self, pos, text, res, id):
         """One button for choosing things"""
@@ -13,10 +13,11 @@ class Button(object):
         self.fontSurf = self.font.render(text, False, (0,0,0))
         self.sprite = pygame.image.load("gfx/button.png").convert_alpha()
         self.id = id
+        self.res = res
         
     def draw(self, screen):
         screen.blit(self.sprite, (self.rect.left, self.rect.top), self.sprite.get_rect())
-        screen.blit(self.fontSurf, (self.rect.left + self.__offsets[self.id], self.rect.top + self.rect.height / 2.0 - self.fontSurf.get_rect().height / 2.0), self.fontSurf.get_rect())
+        screen.blit(self.fontSurf, (self.rect.left + self.fontSurf.get_rect().width / 2.0, self.rect.top + self.rect.height / 2.0 - self.fontSurf.get_rect().height / 2.0), self.fontSurf.get_rect())
         
     def clickCheck(self, pos):
         return self.rect.collidepoint(pos)

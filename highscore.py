@@ -10,7 +10,7 @@ password = "learningisfun"
 databasename = "gigabright"
 
 #NEEDED BUGFIXES:
-#-Adding score currently adds multiple entries. Appears to add 2
+#-Adding score currently adds multiple entries. Appears to add 2 or 3
 #-Retrieving works except for ordering; need that to display best users without ordering within the highscore class
 #-INSERT should be changed to REPLACE (I think) but some sort of key must be defined... 
 #   Idk too much about mySQL but the same name can be input twice. This resulted in a flood of DStrohl entries on the server =P
