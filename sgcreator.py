@@ -1,25 +1,28 @@
 #must install wxpython to the version of python running this code.
-
+# sgcreator.py is a gui used for creating study guides
+#
 import wx
 
 import gbxml
 
 class StudyGuideCreator(wx.Frame):
-    
+    """ StudyGuideCreator is a window that has all the items for creating a study guide """
     def __init__(self, parent, title):
+        """ initialize the window """
         super(StudyGuideCreator, self).__init__(parent, title=title, size=(700,560))
-        self.termList = []
-        self.defList = []
-        self.decoys = []
+        self.termList = [] #the list of terms
+        self.defList = [] #a list of lists of responses, the first in each being the correct response, and all others being decoys
+        self.decoys = [] #the list of decoy responses for the current term
         
-        self.init_ui()
-        self.Show()
-        self.Centre()
+        self.init_ui() #create all the items in the window
+        self.Show() #display the window
+        self.Centre() #put the window in teh center of the screen
     
     def init_ui(self):
+        """ creates all of the items in the window """
         self.master_panel = wx.Panel(self)
-        self.main_panel = wx.Panel(self.master_panel)
-        self.save_panel = wx.Panel(self.master_panel)
+        self.main_panel = wx.Panel(self.master_panel) #used for holding all creator tools
+        self.save_panel = wx.Panel(self.master_panel) #used for holding the save prompt
         
         self.sizer = wx.BoxSizer()
         self.sizer.Add(self.main_panel, 1, wx.EXPAND)
@@ -105,24 +108,34 @@ class StudyGuideCreator(wx.Frame):
         self.main_panel.SetSizer(self.vbox)
     
     def init_save_panel(self):
+        """ create the save prompt """
+        
         self.saveVbox = wx.BoxSizer(wx.VERTICAL)
+        
+        #create items
         self.saveFileLabel = wx.StaticText(self.save_panel, label="Save file as:")
         self.saveFileText = wx.TextCtrl(self.save_panel)
         self.saveFileSaveButton = wx.Button(self.save_panel, 11, label="FileSave ")
         wx.EVT_BUTTON(self, 11, self.save_as)
+        
+        #put them in sizers
         self.saveHbox1 = wx.BoxSizer(wx.HORIZONTAL)
         self.saveHbox2 = wx.BoxSizer(wx.HORIZONTAL)
         self.saveHbox3 = wx.BoxSizer(wx.HORIZONTAL)
         self.saveHbox1.Add(self.saveFileLabel, 1, wx.ALL | wx.EXPAND, 10)
         self.saveHbox2.Add(self.saveFileText, 1, wx.ALL | wx.EXPAND, 10)
         self.saveHbox3.Add(self.saveFileSaveButton, 1, wx.ALL | wx.EXPAND, 10)
+        
+        #put the sizers together
         self.saveVbox.Add(self.saveHbox1, 1, wx.ALL | wx.EXPAND, 10)
         self.saveVbox.Add(self.saveHbox2, 1, wx.ALL | wx.EXPAND, 10)
         self.saveVbox.Add(self.saveHbox3, 1, wx.ALL | wx.EXPAND, 10)
+        
         self.save_panel.SetSizer(self.saveVbox)
         self.save_panel.Hide()
     
     def _add_term(self, event):
+        """ adds a term to the list """
         #print "Added term: " + self.text_term.GetValue() + " with definition: " + self.text_definition.GetValue()
         self.termList.append(self.text_term.GetValue())
         self.defList.append(self._combine_definitions())
@@ -130,48 +143,58 @@ class StudyGuideCreator(wx.Frame):
         self.update_decoy_list()
     
     def _delete_element(self, event):
+        """ deletes a term from the list """
         self.termList.pop(self.term_listBox.GetSelection())
         self.defList.pop(self.term_listBox.GetSelection())
         self.update_list()
     
     def _change_element(self, event):
+        """ alters the selected term to match the current state """
         self.termList[self.term_listBox.GetSelection()] = self.text_term.GetValue()
         self.defList[self.term_listBox.GetSelection()] = self._combine_definitions()
         self.update_list()
         self.update_decoy_list()
     
     def _term_selected(self, event):
+        """ change which term you have selected, and update all items to reflet that """
         self.text_term.SetValue(self.termList[self.term_listBox.GetSelection()])
         self.text_definition.SetValue(self.defList[self.term_listBox.GetSelection()][0])
         self.decoys = [self.defList[self.term_listBox.GetSelection()][i] for i in range(1,len(self.defList[self.term_listBox.GetSelection()]))]
         self.update_decoy_list()
     
     def _add_decoy(self, event):
+        """ add a decoy definition to the list of decoy definitions for that term """
         self.decoys.append(self.text_decoy.GetValue())
         self.update_decoy_list()
     
     def _rem_decoy(self, event):
+        """ remove a decoy definition from the list of decoy definitions for that term """
         self.decoys.pop(self.decoy_listBox.GetSelection())
         self.update_decoy_list()
     
     def _combine_definitions(self):
+        """ combine the correct definition and all decoys into one list """
         result = [self.text_definition.GetValue()]
         for i in self.decoys:
             result.append(i)
         return result
     
     def update_decoy_list(self):
+        """ update the listBox of decoys to reflect the current state """
         self.decoy_listBox.Set(self.decoys)
     
     def update_list(self):
+        """ update the listBox of terms to reflect the current state """
         self.term_listBox.Set([self.termList[i] + " = " + self.defList[i][0] for i in range(0, len(self.termList))])
         
     def save(self, event):
+        """ open the save tab """
         self.main_panel.Hide()
         self.save_panel.Show()
         self.sizer.Layout()
     
     def save_as(self, event):
+        """ write the data to a save file """
         data = [(self.termList[i], self.defList[i]) for i in range(0, len(self.termList))]
         gbxml.saveXML(data, self.saveFileText.GetValue())
         self.save_panel.Hide()
@@ -185,6 +208,7 @@ class StudyGuideCreator(wx.Frame):
             self._add_term(event)
     """
 
+# run the application
 app = wx.App()
 s = StudyGuideCreator(None, title="The Title")
 app.MainLoop()

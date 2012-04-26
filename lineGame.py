@@ -33,8 +33,8 @@ class QA(object):
         pass
         
     def draw(self, screen):
-        screen.fill((0,0,100+50*self.done), self.rectQ)
-        screen.fill((0,0,100+50*self.done), self.rectA)
+        screen.fill((0,0,64+128*self.done), self.rectQ)
+        screen.fill((0,0,64+128*self.done), self.rectA)
         screen.blit(self.imageQ, (self.rectQ[0]+QABORDER, self.rectQ[1]+QABORDER))
         screen.blit(self.imageA, (self.rectA[0]+QABORDER, self.rectA[1]+QABORDER))
 
