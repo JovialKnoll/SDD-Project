@@ -2,6 +2,7 @@ from xml.etree.ElementTree import ElementTree, parse, TreeBuilder, SubElement, d
 from ftplib import FTP
 import os
 
+#Loads a studyguide XML file into a tree structure. 
 def loadXML(filename):
     data = []
     success = True
@@ -26,6 +27,7 @@ def loadXML(filename):
             i += 1
     return data
 
+#Save a studyguide in the format of a tree structure as an XML file. 
 def saveXML(data, filename):
     tb = TreeBuilder()
     studyguide = tb.start("studyguide", {})
@@ -41,12 +43,15 @@ def saveXML(data, filename):
             xmlAnswer.text = dataAnswer
             
     #dump(studyguide)
-    ElementTree(studyguide).write(filename)
+    ElementTree(studyguide).write("xml/" + filename)
 
+#Returns a list of studyguide available locally.
 def listLocalXMLFiles():
     path = "xml/"
     return filterFiles(os.listdir(path), path)
 	
+
+#Returns a list of studyguide available remotely. 
 def listRemoteXMLFiles():
     ftp = FTP("tothemathmos.com")
     ftp.login("gigabright", "learningisfun")
@@ -54,23 +59,32 @@ def listRemoteXMLFiles():
     ftp.quit()
     return list
 
+#Downloads a remote studyguide file by name. 
 def download(file):
     success = True
-    ftp = FTP("tothemathmos.com")
-    ftp.login("gigabright", "learningisfun")
     try:
+        ftp = FTP("tothemathmos.com")
+        ftp.login("gigabright", "learningisfun")
         ftp.retrbinary("RETR " + file, open("xml/" + file, 'wb').write)
     except:
         success = False
     ftp.quit()
     return success
 	
+#Uploads a studyguide file to the remote server. 
 def upload(file):
-    ftp = FTP("tothemathmos.com")
-    ftp.login("gigabright", "learningisfun")
-    ftp.storbinary("STOR " + file, open("xml/" + file, "rb"))
-    ftp.quit()
+    success = True
+    print file
+    try:
+        ftp = FTP("tothemathmos.com")
+        ftp.login("gigabright", "learningisfun")
+        ftp.storbinary("STOR " + file, open("xml/" + file, "rb"))
+        ftp.quit()
+    except:
+        success = False
+    return success
 
+#Filters away anything that doesn't have the xml extention. 
 def filterFiles(files, path = ""):
     xmlList = []
     for fname in files:

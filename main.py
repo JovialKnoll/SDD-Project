@@ -10,6 +10,8 @@ from guideLoader import GuideLoader
 from SGDownloader import SGDownloader
 from scoreScreen import ScoreScreen
 from invadersGame import InvadersGame
+from highscoresList import HighscoresList
+from SGUploader import SGUploader
 
 random.seed()
 #Global Variables
@@ -117,8 +119,9 @@ class Game(object):
         self.guideMenu = False
         self.guideData = []
         
-        self.downloadMenu = False
+        self.loadMenu = False
         self.scoreScreen = False
+        self.highscoresList = False
         
         self.lastScore = 0
         
@@ -150,18 +153,18 @@ class Game(object):
         
         #side loaders
         #left
-        tempBox = LoaderBox((0, self.screen.get_height() / 2), self.curLoaderId, 90)
-        self.curLoaderId += 1
-        tempBox.setPos((tempBox.getPos()[0], tempBox.getPos()[1] - tempBox.getRes()[1] / 2))
-        self.loaderBoxes.append(tempBox)  
+        #tempBox = LoaderBox((0, self.screen.get_height() / 2), self.curLoaderId, 90)
+        #self.curLoaderId += 1
+        #tempBox.setPos((tempBox.getPos()[0], tempBox.getPos()[1] - tempBox.getRes()[1] / 2))
+        #self.loaderBoxes.append(tempBox)  
         
         #right
-        tempBox = LoaderBox((self.screen.get_width(), self.screen.get_height() / 2), self.curLoaderId, 90)
-        self.curLoaderId += 1
-        tempBox.setPos((tempBox.getPos()[0] - tempBox.getRes()[0], tempBox.getPos()[1] - tempBox.getRes()[1] / 2))
-        self.loaderBoxes.append(tempBox)
+        #tempBox = LoaderBox((self.screen.get_width(), self.screen.get_height() / 2), self.curLoaderId, 90)
+        #self.curLoaderId += 1
+        #tempBox.setPos((tempBox.getPos()[0] - tempBox.getRes()[0], tempBox.getPos()[1] - tempBox.getRes()[1] / 2))
+        #self.loaderBoxes.append(tempBox)
         
-        print len(self.loaderBoxes)
+        #print len(self.loaderBoxes)
         
     def process_events(self):
         """Process the event queue, take in player input."""
@@ -170,22 +173,26 @@ class Game(object):
         if self.miniGame:
             if not self.miniGame.process_events():
                 self.lastScore = self.miniGame.get_score()
+                self.scoreScreen = ScoreScreen(screenSize, self.miniGame.get_game(), self.lastScore)
                 self.miniGame = False
-                self.scoreScreen = ScoreScreen(screenSize, self.lastScore)
                 #self.createGUI()
         elif self.scoreScreen:
             if not self.scoreScreen.process_events():
+                self.highscoresList = HighscoresList(screenSize, self.scoreScreen.get_game())
                 self.scoreScreen = False
+        elif self.highscoresList:
+            if not self.highscoresList.process_events():
+                self.highscoresList = False
                 self.createGUI()
         elif self.guideMenu:
             if not self.guideMenu.process_events():
                 self.guideData = self.guideMenu.retrieveData()
-                print self.guideData
+                #print self.guideData
                 self.guideMenu = False
                 self.createGUI()
-        elif self.downloadMenu:
-            if not self.downloadMenu.process_events():
-                self.downloadMenu = False
+        elif self.loadMenu:
+            if not self.loadMenu.process_events():
+                self.loadMenu = False
                 self.createGUI()
         else:
             for event in pygame.event.get():
@@ -225,10 +232,12 @@ class Game(object):
             self.miniGame.update()
         elif self.scoreScreen:
             self.scoreScreen.update()
+        elif self.highscoresList:
+            self.highscoresList.update()
         elif self.guideMenu:
             self.guideMenu.update()
-        elif self.downloadMenu:
-            self.downloadMenu.update()
+        elif self.loadMenu:
+            self.loadMenu.update()
         else:
             self.avatar.update(delta_time)
             for l in self.loaderBoxes:
@@ -244,10 +253,12 @@ class Game(object):
             self.miniGame.draw(self.screen)
         elif self.scoreScreen:
             self.scoreScreen.draw(self.screen)
+        elif self.highscoresList:
+            self.highscoresList.draw(self.screen)
         elif self.guideMenu:
             self.guideMenu.draw(self.screen)
-        elif self.downloadMenu:
-            self.downloadMenu.draw(self.screen)
+        elif self.loadMenu:
+            self.loadMenu.draw(self.screen)
         else:
             self.avatar.draw(self.screen)
             for l in self.loaderBoxes:
@@ -280,7 +291,9 @@ class Game(object):
         elif id == 3:
             self.guideMenu = GuideLoader(screenSize)
         elif id == 4:
-            self.downloadMenu = SGDownloader(screenSize)
+            self.loadMenu = SGDownloader(screenSize)
+        elif id == 5:
+            self.loadMenu = SGUploader(screenSize)
         else:
             self.createGUI()
         

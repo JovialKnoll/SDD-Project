@@ -186,3 +186,7 @@ class FlipGame(MiniGame):
     def get_score(self):
         """ return the player's score """
         return (self.score * (self.scoreMultiplier + len(self.cards)*100)/(len(self.cards)*50))
+
+    def get_game(self):
+        return "flipGame"
+

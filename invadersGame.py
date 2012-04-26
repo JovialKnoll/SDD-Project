@@ -84,6 +84,9 @@ class InvadersGame(MiniGame):
     def get_score(self):
         """ allows the Game to get your score """
         return self.score
+        
+    def get_game(self):
+        return "invadersGame"
 
 def getMaterial():
     """ get some default material, for testing """

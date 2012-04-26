@@ -38,3 +38,6 @@ class MiniGame(object):
     
     def get_score(self):
         return 0
+        
+    def get_game(self):
+        return ""

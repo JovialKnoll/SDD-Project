@@ -3,25 +3,19 @@ import pygame
 from random import shuffle
 from random import randint
 from miniGame import MiniGame
+from textWrapper import get_font_surf
 
 #Global Variables
 QABORDER = 8
 
 class QA(object):
-    def __init__(self, question, answer, posQ=(0,0), posA=(0,0)):
-        
-        #self.question = question
-        #self.answer = answer
+    def __init__(self, screenSize, question, answer, posQ=(0,0), posA=(0,0)):
         f = pygame.font.SysFont(pygame.font.get_default_font(),20)
-        #print question
-        #print answer
-        self.sizeQ = f.size(question)
-        self.sizeA = f.size(answer)
+        self.imageQ = get_font_surf(f,question,screenSize[0]/2-QABORDER*2,True,(0,0,255),(0,0,0,0))
+        self.imageA = get_font_surf(f,answer,screenSize[0]/2-QABORDER*2,True,(0,0,255),(0,0,0,0))
         
-        self.imageQ = f.render(question,False,(0,0,255))
-        self.imageA = f.render(answer,False,(0,0,255))
-        self.rectQ = pygame.Rect(posQ[0]-QABORDER,posQ[1]-QABORDER,self.sizeQ[0]+QABORDER*2,self.sizeQ[1]+QABORDER*2)
-        self.rectA = pygame.Rect(posA[0]-QABORDER,posA[1]-QABORDER,self.sizeA[0]+QABORDER*2,self.sizeA[1]+QABORDER*2)
+        self.rectQ = pygame.Rect(posQ[0]-QABORDER,posQ[1]-QABORDER,self.imageQ.get_width()+QABORDER*2,self.imageQ.get_height()+QABORDER*2)
+        self.rectA = pygame.Rect(posA[0]-QABORDER,posA[1]-QABORDER,self.imageA.get_width()+QABORDER*2,self.imageA.get_height()+QABORDER*2)
         self.done = False
         
     def checkCorrect(self, pos1, pos2):
@@ -94,21 +88,21 @@ class LineGame(MiniGame):
         self.linesWrong = []
         self.currentLine = False
         self.mousePressed = False
-        positionQ = [(2*QABORDER+(num%2)*self.screenSize[0]/2 + (num%8)*16,64*(num/2)+16) for num in range(len(self.material))]
-        positionA = [(2*QABORDER+(num%2)*self.screenSize[0]/2 + (num%8)*16,screenSize[1]/2+64*(num/2)+16) for num in range(len(self.material))]
+        positionQ = [(QABORDER+(num%2)*self.screenSize[0]/2,64*(num/2)+16) for num in range(len(self.material))]
+        positionA = [(QABORDER+(num%2)*self.screenSize[0]/2,screenSize[1]/2+64*(num/2)+16) for num in range(len(self.material))]
         shuffle(positionQ)
         shuffle(positionA)
-        self.qas = [QA(self.material[i][0],self.material[i][1][0],positionQ[i],positionA[i]) for i in range(len(self.material))]
+        self.qas = [QA(self.screenSize,self.material[i][0],self.material[i][1][0],positionQ[i],positionA[i]) for i in range(len(self.material))]
+        self.run = True
         #make list of QA's, pass to lines
         
     def process_events(self):
-        run = True
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                run = False
+                self.run = False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    run = False
+                    self.run = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if not self.mousePressed:
                     self.currentLine = Line(pygame.mouse.get_pos(),self.qas)
@@ -118,7 +112,7 @@ class LineGame(MiniGame):
                     self.currentLine.done = True
                     self.score += self.currentLine.checkCorrect()
                     self.mousePressed = False
-        return run
+        return self.run
                     
     def update(self):
         MiniGame.update(self)
@@ -133,6 +127,10 @@ class LineGame(MiniGame):
                 self.linesWrong.append(self.currentLine)
                 self.currentLine = False
         pygame.display.set_caption("Score: " + str(self.score))
+        self.run = False
+        for qa in self.qas:
+            if qa.done == False:
+                self.run = True
                 
     def draw(self, screen):
         pygame.draw.rect(screen, (160,160,160), (0,0,screen.get_width(),screen.get_height()))
@@ -146,3 +144,6 @@ class LineGame(MiniGame):
     
     def get_score(self):
         return self.score
+        
+    def get_game(self):
+        return "lineGame"
