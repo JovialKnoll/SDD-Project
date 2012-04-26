@@ -32,7 +32,6 @@ def retrieveHighscores(game):
         
 #Adds a new highscore for a specific game. 
 def addScore(game, score):
-    print "new score"
     success = True
 
     try:

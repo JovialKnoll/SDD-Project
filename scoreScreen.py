@@ -76,10 +76,12 @@ class ScoreScreen(object):
         
         
     def update(self):
+        #upload button
         if self.selectionIndex == 0:
             self.success = addScore(self.game, self.score)
             self.scorePopup = ScorePopup((self.screenSize[0]/2 - self.__popup_res[0]/2, self.screenSize[1]/2 - self.__popup_res[1]/2), self.__popup_res, self.success)
             self.selectionIndex = -1
+        #continue button
         elif self.selectionIndex == 1:
             self.done = True
             self.selectionIndex = -1

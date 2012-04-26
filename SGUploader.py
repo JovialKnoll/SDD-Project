@@ -28,6 +28,7 @@ class LineItem(object):
 class LoaderPopup(object):
     
     def __init__(self, pos, res, loaded):
+        """Defines the success/fail of the operation"""
         self.rect = pygame.Rect(pos, res)
         self.font = pygame.font.SysFont("Courier", 16)
         if loaded:
@@ -58,11 +59,14 @@ class SGUploader(object):
         self.rect = pygame.Rect(((screenSize[0] - self.__res[0]) / 2, (screenSize[1] - self.__res[1]) / 2), self.__res)
         self.sprite = pygame.image.load("gfx/guideLoader.png").convert_alpha()
         self.screenSize = screenSize
+        
+        #get local files in the /xml folder
         self.files = listLocalXMLFiles()
         self.selectionIndex = -1
         self.success = False
         self.loadPopup = False
         
+        #create line items for each file found
         self.lineItems = []
         for i in range(0, len(self.files)):
             if i == 0:
@@ -72,6 +76,7 @@ class SGUploader(object):
                 self.files[i], (self.__res[0], self.__lineItemOffset), i))
                 
     def update(self):
+        #upload file based on selected line item
         if self.selectionIndex > -1:
             temp = self.files[self.selectionIndex]
             temp = temp.replace("xml/", "")

@@ -59,12 +59,14 @@ class GuideLoader(object):
         self.sprite = pygame.image.load("gfx/guideLoader.png").convert_alpha()
         self.screenSize = screenSize
         
+        #get the files in the local /xml folder
         self.files = listLocalXMLFiles()
         self.selectionIndex = -1
         self.data = False
         self.loadSuccess = False
         self.loadPopup = False
         
+        #creates line items for each file found
         self.lineItems = []
         for i in range(0, len(self.files)):
             if i == 0:
@@ -75,6 +77,7 @@ class GuideLoader(object):
         
         
     def update(self):
+        #change index and load based on selection
         if self.selectionIndex > -1:
             self.data = loadXML(self.files[self.selectionIndex])
             if self.data:
