@@ -16,6 +16,7 @@ databasename = "gigabright"
 #   Idk too much about mySQL but the same name can be input twice. This resulted in a flood of DStrohl entries on the server =P
 #As a side note, limit on score retrieval was removed to access the current user's score position if not in top 10
 
+#Retrieves a list of highscores for a specific game. 
 def retrieveHighscores(game):
 
     rows = False
@@ -29,6 +30,7 @@ def retrieveHighscores(game):
         rows = cur.fetchall()
         return rows
         
+#Adds a new highscore for a specific game. 
 def addScore(game, score):
     
     success = True
@@ -53,9 +55,8 @@ def addScore(game, score):
     except:
         success = False
     return success
-        
-        #print "Number of rows updated: %d" % cur.rowcount
 
+#Reads the player.txt file and returns the players name. 
 def getPlayer():
     text = open('player.txt', 'r').read()
     return text
