@@ -31,7 +31,9 @@ class LoaderPopup(object):
     def __init__(self, pos, res, loaded):
         self.rect = pygame.Rect(pos, res)
         self.font = pygame.font.SysFont("Courier", 16)
-        if loaded:
+        if loaded == -1:
+            self.fontSurf = self.font.render("Could not get server files", False, (0,0,0))
+        elif loaded:
             self.fontSurf = self.font.render("Guide downloaded successfully.", False, (0,0,0))
         else:
             self.fontSurf = self.font.render("Failed download of selected file.", False, (0,0,0))
@@ -73,7 +75,9 @@ class SGDownloader(object):
                 self.files[i], (self.__res[0], self.__lineItemOffset), i))
                 
     def update(self):
-        if self.selectionIndex > -1:
+        if not self.files:
+            self.loadPopup = LoaderPopup((self.screenSize[0]/2 - self.__popup_res[0]/2, self.screenSize[1]/2 - self.__popup_res[1]/2), self.__popup_res, -1)
+        elif self.selectionIndex > -1:
             self.loadSuccess = download(self.files[self.selectionIndex])    
             self.selectionIndex = -1
             self.loadPopup = LoaderPopup((self.screenSize[0]/2 - self.__popup_res[0]/2, self.screenSize[1]/2 - self.__popup_res[1]/2), self.__popup_res, self.loadSuccess)

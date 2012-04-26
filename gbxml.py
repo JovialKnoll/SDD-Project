@@ -48,10 +48,14 @@ def listLocalXMLFiles():
     return filterFiles(os.listdir(path), path)
 	
 def listRemoteXMLFiles():
-    ftp = FTP("tothemathmos.com")
-    ftp.login("gigabright", "learningisfun")
-    list = filterFiles(ftp.nlst())
-    ftp.quit()
+    
+    try:
+        ftp = FTP("tothemathmos.com")
+        ftp.login("gigabright", "learningisfun")
+        list = filterFiles(ftp.nlst())
+        ftp.quit()
+    except:
+        list = []
     return list
 
 def download(file):
@@ -67,7 +71,6 @@ def download(file):
 	
 def upload(file):
     success = True
-    print file
     try:
         ftp = FTP("tothemathmos.com")
         ftp.login("gigabright", "learningisfun")
