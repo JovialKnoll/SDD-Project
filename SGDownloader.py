@@ -69,7 +69,7 @@ class SGDownloader(object):
             if i == 0:
                  self.lineItems.append(LineItem((self.rect.topleft[0], self.rect.topleft[1]), self.files[i], (self.__res[0], self.__lineItemOffset), i))
             else:
-                self.lineItems.append(LineItem((self.rect.topleft[0], self.rect.topleft[1] +  self.__lineItemOffset * i + self.__separationLine),
+                self.lineItems.append(LineItem((self.rect.topleft[0], self.rect.topleft[1] +  self.__lineItemOffset * i + self.__separationLine * i),
                 self.files[i], (self.__res[0], self.__lineItemOffset), i))
                 
     def update(self):

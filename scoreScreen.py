@@ -1,4 +1,5 @@
 import pygame
+from highscore import addScore
 
 
 class Button(object):
@@ -22,6 +23,25 @@ class Button(object):
         
     def getID(self):
         return self.id
+        
+class ScorePopup(object):
+    
+    def __init__(self, pos, res, loaded):
+        self.rect = pygame.Rect(pos, res)
+        self.font = pygame.font.SysFont("Courier", 16)
+        if loaded:
+            self.fontSurf = self.font.render("Score uploaded successfully.", False, (0,0,0))
+        else:
+            self.fontSurf = self.font.render("Could upload score.", False, (0,0,0))
+        self.sprite = pygame.image.load("gfx/loaderPopup.png").convert_alpha()
+        
+    def draw(self,screen):
+        screen.blit(self.sprite, (self.rect.left, self.rect.top), self.sprite.get_rect())
+        screen.blit(self.fontSurf, (self.rect.left + self.rect.width/2.0 - self.fontSurf.get_rect().width/2.0, self.rect.top + self.rect.height/2.0 - self.fontSurf.get_rect().height/2.0),
+        self.fontSurf.get_rect())
+        
+    def clickCheck(self, pos):
+        return self.rect.collidepoint(pos)
 
 
 class ScoreScreen(object):
@@ -29,18 +49,24 @@ class ScoreScreen(object):
     __res = (800,600)
     __button_res = (100,75)
     __button_offset = 20
+    __popup_res = (300, 200)
     
     
-    def __init__(self, screenSize, score):
+    def __init__(self, screenSize, game, score):
         self.rect = pygame.Rect(((screenSize[0] - self.__res[0]) / 2, (screenSize[1] - self.__res[1]) / 2), self.__res)
         self.sprite = pygame.image.load("gfx/scoreScreen.png").convert_alpha()
         self.font = pygame.font.SysFont("Courier", 32)
         self.fontSurf = self.font.render("YOUR SCORE THIS GAME WAS", False, (0,0,0))
         self.scoreSurf = self.font.render(str(score), False, (0,0,0))
         
+        self.screenSize = screenSize
+        self.game = game
+        self.score = score
+        
         self.selectionIndex = -1
         self.buttons = []
         self.done = False
+        self.scorePopup = False
         
         self.buttons.append(Button((self.rect.topleft[0] + self.__button_offset, self.rect.topleft[1] + self.__res[1] * 2.0 / 3.0), "Upload", self.__button_res, 0))
         self.buttons.append(Button((self.rect.topright[0] - self.__button_offset - self.__button_res[0], self.rect.topleft[1] + self.__res[1] * 2.0 / 3.0), "Continue", self.__button_res, 1))
@@ -48,8 +74,8 @@ class ScoreScreen(object):
         
     def update(self):
         if self.selectionIndex == 0:
-            #upload
-            pass
+            self.success = addScore(self.game, self.score)
+            self.scorePopup = ScorePopup((self.screenSize[0]/2 - self.__popup_res[0]/2, self.screenSize[1]/2 - self.__popup_res[1]/2), self.__popup_res, self.success)
         elif self.selectionIndex == 1:
             self.done = True
             
@@ -61,6 +87,9 @@ class ScoreScreen(object):
         screen.blit(self.scoreSurf, (self.rect.right / 2 - self.scoreSurf.get_rect().width / 2.0, (self.rect.bottom / 2) + self.fontSurf.get_rect().height), self.scoreSurf.get_rect())
         for b in self.buttons:
             b.draw(screen)
+            
+        if self.scorePopup:
+            self.scorePopup.draw(screen)
         
     def process_events(self):
         run = True
@@ -74,8 +103,15 @@ class ScoreScreen(object):
                     if event.key == pygame.K_ESCAPE:
                         run = False
                 if event.type == pygame.MOUSEBUTTONUP:
-                    for b in self.buttons:
-                            if(b.clickCheck(event.pos)):
-                                self.selectionIndex = b.getID()
+                    if not self.scorePopup:
+                        for b in self.buttons:
+                                if(b.clickCheck(event.pos)):
+                                    self.selectionIndex = b.getID()
+                    else:
+                        if self.scorePopup.clickCheck(event.pos):
+                            run = False
                         
         return run
+        
+    def get_game(self):
+        return self.game

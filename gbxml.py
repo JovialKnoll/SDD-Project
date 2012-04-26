@@ -41,7 +41,7 @@ def saveXML(data, filename):
             xmlAnswer.text = dataAnswer
             
     #dump(studyguide)
-    ElementTree(studyguide).write(filename)
+    ElementTree(studyguide).write("xml/" + filename)
 
 def listLocalXMLFiles():
     path = "xml/"
@@ -56,9 +56,9 @@ def listRemoteXMLFiles():
 
 def download(file):
     success = True
-    ftp = FTP("tothemathmos.com")
-    ftp.login("gigabright", "learningisfun")
     try:
+        ftp = FTP("tothemathmos.com")
+        ftp.login("gigabright", "learningisfun")
         ftp.retrbinary("RETR " + file, open("xml/" + file, 'wb').write)
     except:
         success = False
@@ -66,10 +66,16 @@ def download(file):
     return success
 	
 def upload(file):
-    ftp = FTP("tothemathmos.com")
-    ftp.login("gigabright", "learningisfun")
-    ftp.storbinary("STOR " + file, open("xml/" + file, "rb"))
-    ftp.quit()
+    success = True
+    print file
+    try:
+        ftp = FTP("tothemathmos.com")
+        ftp.login("gigabright", "learningisfun")
+        ftp.storbinary("STOR " + file, open("xml/" + file, "rb"))
+        ftp.quit()
+    except:
+        success = False
+    return success
 
 def filterFiles(files, path = ""):
     xmlList = []

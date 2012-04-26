@@ -69,6 +69,9 @@ class InvadersGame(MiniGame):
     
     def get_score(self):
         return self.score
+        
+    def get_game(self):
+        return "invadersGame"
 
 def getMaterial():
     return [("apple", ["une pomme", "un apple"]), ("banana", ["une banane", "un ananas"]), ("potato", ["une pomme de terre"]), ("grapefruit", ["un pamplemousse"]), ("orange", ["une orange"]), ("pineapple", ["un ananas", "une anana", "un pinapple", "une pomme de terre", "un apple"])]

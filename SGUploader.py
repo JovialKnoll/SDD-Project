@@ -1,7 +1,6 @@
 import pygame
+from gbxml import upload
 from gbxml import listLocalXMLFiles
-from gbxml import loadXML
-
 
 class LineItem(object):
     
@@ -24,16 +23,17 @@ class LineItem(object):
         
     def getID(self):
         return self.id
-        
+     
+     
 class LoaderPopup(object):
     
     def __init__(self, pos, res, loaded):
         self.rect = pygame.Rect(pos, res)
         self.font = pygame.font.SysFont("Courier", 16)
         if loaded:
-            self.fontSurf = self.font.render("Guide loaded successfully.", False, (0,0,0))
+            self.fontSurf = self.font.render("Guide uploaded successfully.", False, (0,0,0))
         else:
-            self.fontSurf = self.font.render("Could not open selected file.", False, (0,0,0))
+            self.fontSurf = self.font.render("Failed upload of selected file.", False, (0,0,0))
         self.sprite = pygame.image.load("gfx/loaderPopup.png").convert_alpha()
         
     def draw(self,screen):
@@ -45,7 +45,8 @@ class LoaderPopup(object):
         return self.rect.collidepoint(pos)
 
 
-class GuideLoader(object):
+        
+class SGUploader(object):
     
     __res = (600, 400)
     __lineItemOffset = 20
@@ -53,15 +54,13 @@ class GuideLoader(object):
     __popup_res = (300, 200)
     
     def __init__(self, screenSize):
-        """Study guide loader menu"""
+        """Downloads guides from the server to the local client"""
         self.rect = pygame.Rect(((screenSize[0] - self.__res[0]) / 2, (screenSize[1] - self.__res[1]) / 2), self.__res)
         self.sprite = pygame.image.load("gfx/guideLoader.png").convert_alpha()
         self.screenSize = screenSize
-        
         self.files = listLocalXMLFiles()
         self.selectionIndex = -1
-        self.data = False
-        self.loadSuccess = False
+        self.success = False
         self.loadPopup = False
         
         self.lineItems = []
@@ -71,32 +70,22 @@ class GuideLoader(object):
             else:
                 self.lineItems.append(LineItem((self.rect.topleft[0], self.rect.topleft[1] +  self.__lineItemOffset * i + self.__separationLine * i),
                 self.files[i], (self.__res[0], self.__lineItemOffset), i))
-        
-        
+                
     def update(self):
         if self.selectionIndex > -1:
-            self.data = loadXML(self.files[self.selectionIndex])
-            if self.data:
-                self.loadSuccess = True
+            temp = self.files[self.selectionIndex]
+            temp = temp.replace("xml/", "")
+            self.success = upload(temp)    
             self.selectionIndex = -1
-            self.loadPopup = LoaderPopup((self.screenSize[0]/2 - self.__popup_res[0]/2, self.screenSize[1]/2 - self.__popup_res[1]/2), self.__popup_res, self.loadSuccess)
-            
-            
-        
-        
+            self.loadPopup = LoaderPopup((self.screenSize[0]/2 - self.__popup_res[0]/2, self.screenSize[1]/2 - self.__popup_res[1]/2), self.__popup_res, self.success)
+    
     def draw(self, screen):
         screen.blit(self.sprite, (self.rect.left, self.rect.top), self.sprite.get_rect())
         for l in self.lineItems:
             l.draw(screen)
         if self.loadPopup:
             self.loadPopup.draw(screen)
-            
-            
-    def retrieveData(self):
-        return self.data
-            
         
-    
     def process_events(self):
         run = True
         for event in pygame.event.get():

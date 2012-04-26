@@ -144,3 +144,6 @@ class LineGame(MiniGame):
     
     def get_score(self):
         return self.score
+        
+    def get_game(self):
+        return "lineGame"
