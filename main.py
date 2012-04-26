@@ -32,7 +32,6 @@ class Avatar(object):
         #self.surf = pygame.Surface((self.rect.width, self.rect.height))
         self.setPos(pos)
         self.state = {"left":False, "right":False, "up":False, "down":False}
-        
         #Alter sprite pathing and use subsurfaces when sprite sheets are made
         self.sprite = pygame.image.load("gfx/redSquare.png").convert_alpha()
         
@@ -126,7 +125,6 @@ class Game(object):
         self.lastScore = 0
         
         #lots of other stuff will be needed, of course
-        
         #debug stuff below
         #turning off this for GUI stuff
         #self.miniGame = LineGame([])
@@ -175,25 +173,30 @@ class Game(object):
                 self.lastScore = self.miniGame.get_score()
                 self.scoreScreen = ScoreScreen(screenSize, self.miniGame.get_game(), self.lastScore)
                 self.miniGame = False
+                pygame.display.set_caption("Giga-Bright presents:")
                 #self.createGUI()
         elif self.scoreScreen:
             if not self.scoreScreen.process_events():
                 self.highscoresList = HighscoresList(screenSize, self.scoreScreen.get_game())
                 self.scoreScreen = False
+                pygame.display.set_caption("Giga-Bright presents:")
         elif self.highscoresList:
             if not self.highscoresList.process_events():
                 self.highscoresList = False
                 self.createGUI()
+                pygame.display.set_caption("Giga-Bright presents:")
         elif self.guideMenu:
             if not self.guideMenu.process_events():
                 self.guideData = self.guideMenu.retrieveData()
                 #print self.guideData
                 self.guideMenu = False
                 self.createGUI()
+                pygame.display.set_caption("Giga-Bright presents:")
         elif self.loadMenu:
             if not self.loadMenu.process_events():
                 self.loadMenu = False
                 self.createGUI()
+                pygame.display.set_caption("Giga-Bright presents:")
         else:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
