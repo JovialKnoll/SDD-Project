@@ -18,6 +18,7 @@ random.seed()
 #screenSize = (1280, 960)
 screenSize = (800, 600)
 fpsLimit = 30
+loaderText = ["Line Game", "Memory Cards", "Trivia Invaders", "Load Guide", "Download", "Upload"]
 
 #Main Menu Player Avatar
 #Probably should make this inherit from the actor class...
@@ -62,7 +63,7 @@ class LoaderBox(object):
 
     __res = (150, 50)
     
-    def __init__(self, pos, id, rotation = 0):
+    def __init__(self, pos, id, text, rotation = 0):
         """Create a box to load a menu/game."""
         if rotation == 90 or rotation == 270:
             self.rect = pygame.Rect((0,0), (self.__res[1], self.__res[0]))
@@ -70,6 +71,9 @@ class LoaderBox(object):
             self.rect = pygame.Rect((0,0), self.__res)
         self.setPos(pos)
         self.sprite = pygame.image.load("gfx/loaderBox.png").convert_alpha()
+        self.font = pygame.font.SysFont("Courier", 16)
+        
+        self.fontSurf = self.font.render(text, False, (0,0,0))
         self.rotation = rotation
         self.res = self.__res
         self.id = id     
@@ -96,6 +100,8 @@ class LoaderBox(object):
     
     def draw(self, screen):
         screen.blit(self.sprite, (self.rect.left, self.rect.top), self.sprite.get_rect())
+        screen.blit(self.fontSurf, (self.rect.left + self.rect.width/2.0 - self.fontSurf.get_rect().width/2.0, self.rect.top + self.rect.height/2.0 - self.fontSurf.get_rect().height/2.0),
+        self.fontSurf.get_rect())
     
 
 #Game Object
@@ -137,14 +143,14 @@ class Game(object):
         self.curLoaderId = 0
         #top loaders
         for i in range(3):
-            tempBox = LoaderBox(((self.screen.get_width() / 3) * i, 0), self.curLoaderId)
+            tempBox = LoaderBox(((self.screen.get_width() / 3) * i, 0), self.curLoaderId, loaderText[self.curLoaderId])
             self.curLoaderId += 1
             tempBox.setPos((tempBox.getPos()[0] + tempBox.getRes()[0] / 3, tempBox.getPos()[1]))
             self.loaderBoxes.append(tempBox)
             
         #bottom loaders
         for i in range(3):
-            tempBox = LoaderBox(((self.screen.get_width() / 3) * i, self.screen.get_height()), self.curLoaderId)
+            tempBox = LoaderBox(((self.screen.get_width() / 3) * i, self.screen.get_height()), self.curLoaderId, loaderText[self.curLoaderId])
             self.curLoaderId += 1
             tempBox.setPos((tempBox.getPos()[0] + tempBox.getRes()[0] / 3, tempBox.getPos()[1] - tempBox.getRes()[1]))
             self.loaderBoxes.append(tempBox)    
