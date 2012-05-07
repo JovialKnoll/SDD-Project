@@ -1,5 +1,5 @@
 import pygame
-from highscore import retrieveHighscores
+from highscore import retrieve_highscores
 
 
 class Button(object):
@@ -19,10 +19,10 @@ class Button(object):
         screen.blit(self.sprite, (self.rect.left, self.rect.top), self.sprite.get_rect())
         screen.blit(self.fontSurf, (self.rect.left + self.fontSurf.get_rect().width / 2.0, self.rect.top + self.rect.height / 2.0 - self.fontSurf.get_rect().height / 2.0), self.fontSurf.get_rect())
         
-    def clickCheck(self, pos):
+    def click_check(self, pos):
         return self.rect.collidepoint(pos)
         
-    def getID(self):
+    def get_id(self):
         return self.id
 
 class LineItem(object):
@@ -42,7 +42,7 @@ class LineItem(object):
         screen.blit(self.fontSurf, (self.rect.left, self.rect.top), self.fontSurf.get_rect())
         
         
-    def getID(self):
+    def get_id(self):
         return self.id
         
 
@@ -66,7 +66,8 @@ class HighscoresList(object):
         self.game = game
         
         #get scores from server
-        self.scores = retrieveHighscores(self.game)
+        self.scores = retrieve_highscores(self.game)
+        self.scores = sorted(self.scores, key=lambda score: -int(score[1]))
         self.button = Button((self.rect.right / 2.0 - self.__button_res[0] / 2.0, self.rect.bottom - self.__res[1] * 1.0/15.0 - self.__button_res[1]), "Done", self.__button_res, 0)
         
         #create lines for each score; max of 10 items
@@ -106,7 +107,7 @@ class HighscoresList(object):
                 if event.key == pygame.K_ESCAPE:
                     run = False
             if event.type == pygame.MOUSEBUTTONUP:
-                    if(self.button.clickCheck(event.pos)):
+                    if(self.button.click_check(event.pos)):
                         run = False
                         
         return run

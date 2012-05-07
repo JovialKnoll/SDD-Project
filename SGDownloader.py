@@ -1,5 +1,5 @@
 import pygame
-from gbxml import listRemoteXMLFiles
+from gbxml import list_remote_xml_files
 from gbxml import download
 from gbxml import upload
 
@@ -19,7 +19,7 @@ class LineItem(object):
         screen.blit(self.sprite, (self.rect.left, self.rect.top), self.sprite.get_rect())
         screen.blit(self.fontSurf, (self.rect.left, self.rect.top), self.fontSurf.get_rect())
         
-    def clickCheck(self, pos):
+    def click_check(self, pos):
         return self.rect.collidepoint(pos)
         
     def getID(self):
@@ -45,7 +45,7 @@ class LoaderPopup(object):
         screen.blit(self.fontSurf, (self.rect.left + self.rect.width/2.0 - self.fontSurf.get_rect().width/2.0, self.rect.top + self.rect.height/2.0 - self.fontSurf.get_rect().height/2.0),
         self.fontSurf.get_rect())
         
-    def clickCheck(self, pos):
+    def click_check(self, pos):
         return self.rect.collidepoint(pos)
 
 
@@ -62,7 +62,7 @@ class SGDownloader(object):
         self.rect = pygame.Rect(((screenSize[0] - self.__res[0]) / 2, (screenSize[1] - self.__res[1]) / 2), self.__res)
         self.sprite = pygame.image.load("gfx/guideLoader.png").convert_alpha()
         self.screenSize = screenSize
-        self.files = listRemoteXMLFiles()
+        self.files = list_remote_xml_files()
         self.selectionIndex = -1
         self.loadSuccess = False
         self.loadPopup = False
@@ -101,10 +101,10 @@ class SGDownloader(object):
             if event.type == pygame.MOUSEBUTTONUP:
                 if not self.loadPopup:
                     for l in self.lineItems:
-                        if(l.clickCheck(event.pos)):
+                        if(l.click_check(event.pos)):
                             self.selectionIndex = l.getID()
                 else:
-                    if(self.loadPopup.clickCheck(event.pos)):
+                    if(self.loadPopup.click_check(event.pos)):
                         run = False
                         
         return run                

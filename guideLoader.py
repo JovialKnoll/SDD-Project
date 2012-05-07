@@ -1,6 +1,6 @@
 import pygame
-from gbxml import listLocalXMLFiles
-from gbxml import loadXML
+from gbxml import list_local_xml_files
+from gbxml import load_xml
 
 
 class LineItem(object):
@@ -19,7 +19,7 @@ class LineItem(object):
         screen.blit(self.sprite, (self.rect.left, self.rect.top), self.sprite.get_rect())
         screen.blit(self.fontSurf, (self.rect.left, self.rect.top), self.fontSurf.get_rect())
         
-    def clickCheck(self, pos):
+    def click_check(self, pos):
         return self.rect.collidepoint(pos)
         
     def getID(self):
@@ -42,7 +42,7 @@ class LoaderPopup(object):
         screen.blit(self.fontSurf, (self.rect.left + self.rect.width/2.0 - self.fontSurf.get_rect().width/2.0, self.rect.top + self.rect.height/2.0 - self.fontSurf.get_rect().height/2.0),
         self.fontSurf.get_rect())
         
-    def clickCheck(self, pos):
+    def click_check(self, pos):
         return self.rect.collidepoint(pos)
 
 
@@ -60,7 +60,7 @@ class GuideLoader(object):
         self.screenSize = screenSize
         
         #get the files in the local /xml folder
-        self.files = listLocalXMLFiles()
+        self.files = list_local_xml_files()
         self.selectionIndex = -1
         self.data = False
         self.loadSuccess = False
@@ -79,7 +79,7 @@ class GuideLoader(object):
     def update(self):
         #change index and load based on selection
         if self.selectionIndex > -1:
-            self.data = loadXML(self.files[self.selectionIndex])
+            self.data = load_xml(self.files[self.selectionIndex])
             if self.data:
                 self.loadSuccess = True
             self.selectionIndex = -1
@@ -112,10 +112,10 @@ class GuideLoader(object):
             if event.type == pygame.MOUSEBUTTONUP:
                 if not self.loadPopup:
                     for l in self.lineItems:
-                        if(l.clickCheck(event.pos)):
+                        if(l.click_check(event.pos)):
                             self.selectionIndex = l.getID()
                 else:
-                    if(self.loadPopup.clickCheck(event.pos)):
+                    if(self.loadPopup.click_check(event.pos)):
                         run = False
                         
         return run

@@ -1,5 +1,5 @@
 import pygame
-from highscore import addScore
+from highscore import add_score
 
 
 class Button(object):
@@ -18,7 +18,7 @@ class Button(object):
         screen.blit(self.sprite, (self.rect.left, self.rect.top), self.sprite.get_rect())
         screen.blit(self.fontSurf, (self.rect.left + self.__offsets[self.id], self.rect.top + self.rect.height / 2.0 - self.fontSurf.get_rect().height / 2.0), self.fontSurf.get_rect())
         
-    def clickCheck(self, pos):
+    def click_check(self, pos):
         return self.rect.collidepoint(pos)
         
     def getID(self):
@@ -41,7 +41,7 @@ class ScorePopup(object):
         screen.blit(self.fontSurf, (self.rect.left + self.rect.width/2.0 - self.fontSurf.get_rect().width/2.0, self.rect.top + self.rect.height/2.0 - self.fontSurf.get_rect().height/2.0),
         self.fontSurf.get_rect())
         
-    def clickCheck(self, pos):
+    def click_check(self, pos):
         return self.rect.collidepoint(pos)
 
 
@@ -78,7 +78,7 @@ class ScoreScreen(object):
     def update(self):
         #upload button
         if self.selectionIndex == 0:
-            self.success = addScore(self.game, self.score)
+            self.success = add_score(self.game, self.score)
             self.scorePopup = ScorePopup((self.screenSize[0]/2 - self.__popup_res[0]/2, self.screenSize[1]/2 - self.__popup_res[1]/2), self.__popup_res, self.success)
             self.selectionIndex = -1
         #continue button
@@ -112,10 +112,10 @@ class ScoreScreen(object):
                 if event.type == pygame.MOUSEBUTTONUP:
                     if not self.scorePopup:
                         for b in self.buttons:
-                                if(b.clickCheck(event.pos)):
+                                if(b.click_check(event.pos)):
                                     self.selectionIndex = b.getID()
                     else:
-                        if self.scorePopup.clickCheck(event.pos):
+                        if self.scorePopup.click_check(event.pos):
                             run = False
                         
         return run

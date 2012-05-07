@@ -3,7 +3,7 @@ from ftplib import FTP
 import os
 
 #Loads a studyguide XML file into a tree structure. 
-def loadXML(filename):
+def load_xml(filename):
     data = []
     success = True
     try:
@@ -28,7 +28,7 @@ def loadXML(filename):
     return data
 
 #Save a studyguide in the format of a tree structure as an XML file. 
-def saveXML(data, filename):
+def save_xml(data, filename):
     tb = TreeBuilder()
     studyguide = tb.start("studyguide", {})
     
@@ -46,13 +46,13 @@ def saveXML(data, filename):
     ElementTree(studyguide).write("xml/" + filename)
 
 #Returns a list of studyguide available locally.
-def listLocalXMLFiles():
+def list_local_xml_files():
     path = "xml/"
     return filterFiles(os.listdir(path), path)
 	
 
 #Returns a list of studyguide available remotely. 
-def listRemoteXMLFiles():
+def list_remote_xml_files():
     
     try:
         ftp = FTP("tothemathmos.com")
@@ -98,15 +98,15 @@ def filterFiles(files, path = ""):
 #download("lol.txt")
 #upload("example.xml")
 
-#list = listRemoteXMLFiles()
+#list = list_remote_xml_files()
 #print list
-#list = listLocalXMLFiles()
+#list = list_local_xml_files()
 #print list
 
 #data = [("Question 1?", ["bla1", "lah1", "lol1"]), ("Question 2?", ["bla2", "lah2", "lol2"])]
-#saveXML(data)
+#save_xml(data)
 
-#data = loadXML("example.xml")
+#data = load_xml("example.xml")
 #for q in data:
 #    print q[0]+'\n'
 #    for a in q[1]:

@@ -18,7 +18,7 @@ class QA(object):
         self.rectA = pygame.Rect(posA[0]-QABORDER,posA[1]-QABORDER,self.imageA.get_width()+QABORDER*2,self.imageA.get_height()+QABORDER*2)
         self.done = False
         
-    def checkCorrect(self, pos1, pos2):
+    def check_correct(self, pos1, pos2):
         if (self.rectQ.collidepoint(pos1) and self.rectA.collidepoint(pos2)) or (self.rectQ.collidepoint(pos2) and self.rectA.collidepoint(pos1)):
             self.done = True
             return True
@@ -48,11 +48,11 @@ class Line(object):
         self.count = 60
         self.listQA = listQA
         
-    def checkCorrect(self):
+    def check_correct(self):
         for qa in self.listQA:
             if qa.done:
                 continue
-            if qa.checkCorrect(self.startPos, self.endPos):
+            if qa.check_correct(self.startPos, self.endPos):
                 self.correct = True
                 return 15
         for qa1 in self.listQA:
@@ -110,7 +110,7 @@ class LineGame(MiniGame):
             if event.type == pygame.MOUSEBUTTONUP:
                 if self.mousePressed:
                     self.currentLine.done = True
-                    self.score += self.currentLine.checkCorrect()
+                    self.score += self.currentLine.check_correct()
                     self.mousePressed = False
         return self.run
                     

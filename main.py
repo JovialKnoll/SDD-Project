@@ -31,29 +31,29 @@ class Avatar(object):
         """Makes an avatar for menu selection."""
         self.rect = pygame.Rect((0,0), self.__res)
         #self.surf = pygame.Surface((self.rect.width, self.rect.height))
-        self.setPos(pos)
+        self.set_pos(pos)
         self.state = {"left":False, "right":False, "up":False, "down":False}
         #Alter sprite pathing and use subsurfaces when sprite sheets are made
         self.sprite = pygame.image.load("gfx/redSquare.png").convert_alpha()
         
-    def setPos(self, pos):
+    def set_pos(self, pos):
         self.rect.topleft = pos
         
-    def getPos(self):
+    def get_pos(self):
         return self.rect.topleft
     
-    def getRes(self):
+    def get_res(self):
         return self.__res
         
     def update(self, deltaTime):
         if self.state['left']:
-            self.setPos((self.rect.topleft[0] - self.__velocity[0] * deltaTime, self.rect.topleft[1]))
+            self.set_pos((self.rect.topleft[0] - self.__velocity[0] * deltaTime, self.rect.topleft[1]))
         if self.state['up']:
-            self.setPos((self.rect.topleft[0],  self.rect.topleft[1] - self.__velocity[1] * deltaTime))
+            self.set_pos((self.rect.topleft[0],  self.rect.topleft[1] - self.__velocity[1] * deltaTime))
         if self.state['right']:
-            self.setPos((self.rect.topleft[0] + self.__velocity[0] * deltaTime, self.rect.topleft[1]))
+            self.set_pos((self.rect.topleft[0] + self.__velocity[0] * deltaTime, self.rect.topleft[1]))
         if self.state['down']:
-            self.setPos((self.rect.topleft[0],  self.rect.topleft[1] + self.__velocity[1] * deltaTime))
+            self.set_pos((self.rect.topleft[0],  self.rect.topleft[1] + self.__velocity[1] * deltaTime))
         
         
     def draw(self, screen):
@@ -69,7 +69,7 @@ class LoaderBox(object):
             self.rect = pygame.Rect((0,0), (self.__res[1], self.__res[0]))
         else:
             self.rect = pygame.Rect((0,0), self.__res)
-        self.setPos(pos)
+        self.set_pos(pos)
         self.sprite = pygame.image.load("gfx/loaderBox.png").convert_alpha()
         self.font = pygame.font.SysFont("Courier", 16)
         
@@ -82,16 +82,16 @@ class LoaderBox(object):
             self.sprite = pygame.transform.rotate(self.sprite, self.rotation)
             self.res = (self.__res[1], self.__res[0])
         
-    def setPos(self, pos):
+    def set_pos(self, pos):
         self.rect.topleft = pos
     
-    def getPos(self):
+    def get_pos(self):
         return self.rect.topleft
     
-    def getRes(self):
+    def get_res(self):
         return self.res
     
-    def getId(self):
+    def get_id(self):
         return self.id
         
         
@@ -138,34 +138,34 @@ class Game(object):
     def createGUI(self):
     
         self.avatar = Avatar(((self.screen.get_width() / 2), self.screen.get_height() / 2))
-        self.avatar.setPos((self.avatar.getPos()[0] - self.avatar.getRes()[0] / 2, self.avatar.getPos()[1] - self.avatar.getRes()[1] / 2))
+        self.avatar.set_pos((self.avatar.get_pos()[0] - self.avatar.get_res()[0] / 2, self.avatar.get_pos()[1] - self.avatar.get_res()[1] / 2))
         
         self.curLoaderId = 0
         #top loaders
         for i in range(3):
             tempBox = LoaderBox(((self.screen.get_width() / 3) * i, 0), self.curLoaderId, loaderText[self.curLoaderId])
             self.curLoaderId += 1
-            tempBox.setPos((tempBox.getPos()[0] + tempBox.getRes()[0] / 3, tempBox.getPos()[1]))
+            tempBox.set_pos((tempBox.get_pos()[0] + tempBox.get_res()[0] / 3, tempBox.get_pos()[1]))
             self.loaderBoxes.append(tempBox)
             
         #bottom loaders
         for i in range(3):
             tempBox = LoaderBox(((self.screen.get_width() / 3) * i, self.screen.get_height()), self.curLoaderId, loaderText[self.curLoaderId])
             self.curLoaderId += 1
-            tempBox.setPos((tempBox.getPos()[0] + tempBox.getRes()[0] / 3, tempBox.getPos()[1] - tempBox.getRes()[1]))
+            tempBox.set_pos((tempBox.get_pos()[0] + tempBox.get_res()[0] / 3, tempBox.get_pos()[1] - tempBox.get_res()[1]))
             self.loaderBoxes.append(tempBox)    
         
         #side loaders
         #left
         #tempBox = LoaderBox((0, self.screen.get_height() / 2), self.curLoaderId, 90)
         #self.curLoaderId += 1
-        #tempBox.setPos((tempBox.getPos()[0], tempBox.getPos()[1] - tempBox.getRes()[1] / 2))
+        #tempBox.set_pos((tempBox.get_pos()[0], tempBox.get_pos()[1] - tempBox.get_res()[1] / 2))
         #self.loaderBoxes.append(tempBox)  
         
         #right
         #tempBox = LoaderBox((self.screen.get_width(), self.screen.get_height() / 2), self.curLoaderId, 90)
         #self.curLoaderId += 1
-        #tempBox.setPos((tempBox.getPos()[0] - tempBox.getRes()[0], tempBox.getPos()[1] - tempBox.getRes()[1] / 2))
+        #tempBox.set_pos((tempBox.get_pos()[0] - tempBox.get_res()[0], tempBox.get_pos()[1] - tempBox.get_res()[1] / 2))
         #self.loaderBoxes.append(tempBox)
         
         #print len(self.loaderBoxes)
@@ -251,7 +251,7 @@ class Game(object):
             self.avatar.update(delta_time)
             for l in self.loaderBoxes:
                 if l.rect.colliderect(self.avatar.rect):
-                    self.loadItem(l.getId())
+                    self.loadItem(l.get_id())
                     pass
                     
     def draw(self):
@@ -277,8 +277,8 @@ class Game(object):
         #only loading LineGame for now
         del self.loaderBoxes[:]
         del self.avatar
-        #self.avatar.setPos(((self.screen.get_width() / 2), self.screen.get_height() / 2))
-        #self.avatar.setPos((self.avatar.getPos()[0] - self.avatar.getRes()[0] / 2, self.avatar.getPos()[1] - self.avatar.getRes()[1] / 2))
+        #self.avatar.set_pos(((self.screen.get_width() / 2), self.screen.get_height() / 2))
+        #self.avatar.set_pos((self.avatar.get_pos()[0] - self.avatar.get_res()[0] / 2, self.avatar.get_pos()[1] - self.avatar.get_res()[1] / 2))
         if id == 0:
             #debug code
             if not self.guideData:

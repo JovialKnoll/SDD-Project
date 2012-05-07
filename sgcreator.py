@@ -20,77 +20,77 @@ class StudyGuideCreator(wx.Frame):
     
     def init_ui(self):
         """ creates all of the items in the window """
-        self.master_panel = wx.Panel(self)
-        self.main_panel = wx.Panel(self.master_panel) #used for holding all creator tools
-        self.save_panel = wx.Panel(self.master_panel) #used for holding the save prompt
+        self.masterPanel = wx.Panel(self)
+        self.mainPanel = wx.Panel(self.masterPanel) #used for holding all creator tools
+        self.savePanel = wx.Panel(self.masterPanel) #used for holding the save prompt
         
         self.sizer = wx.BoxSizer()
-        self.sizer.Add(self.main_panel, 1, wx.EXPAND)
-        self.sizer.Add(self.save_panel, 1, wx.EXPAND)
-        self.master_panel.SetSizer(self.sizer)
+        self.sizer.Add(self.mainPanel, 1, wx.EXPAND)
+        self.sizer.Add(self.savePanel, 1, wx.EXPAND)
+        self.masterPanel.SetSizer(self.sizer)
         self.init_save_panel()
         
         self.vbox = wx.BoxSizer(wx.VERTICAL)
 
         #row 2 is the save button
         self.hbox2 = wx.BoxSizer(wx.HORIZONTAL)
-        self.button_save = wx.Button(self.main_panel, 5, label="Save Study Guide")
-        self.hbox2.Add(self.button_save, 1, wx.EXPAND | wx.LEFT | wx.RIGHT, 70)
+        self.buttonSave = wx.Button(self.mainPanel, 5, label="Save Study Guide")
+        self.hbox2.Add(self.buttonSave, 1, wx.EXPAND | wx.LEFT | wx.RIGHT, 70)
         
         #row 1 is the add term button
         self.hbox1 = wx.BoxSizer(wx.HORIZONTAL)
-        self.button_add = wx.Button(self.main_panel, 2, label="Add Term")
-        self.hbox1.Add(self.button_add, 1, wx.EXPAND | wx.LEFT | wx.RIGHT, 70)
+        self.buttonAdd = wx.Button(self.mainPanel, 2, label="Add Term")
+        self.hbox1.Add(self.buttonAdd, 1, wx.EXPAND | wx.LEFT | wx.RIGHT, 70)
         
         #row 3 is the labels for term and definition textboxes
         self.hbox3 = wx.BoxSizer(wx.HORIZONTAL)
-        self.label_term = wx.StaticText(self.main_panel, label="Term/Question:")
-        self.label_definition = wx.StaticText(self.main_panel, label="Definition/Answer:")
-        self.hbox3.Add(self.label_term, 2, wx.RIGHT, 50)
-        self.hbox3.Add(self.label_definition, 3, wx.RIGHT, 50)
+        self.labelTerm = wx.StaticText(self.mainPanel, label="Term/Question:")
+        self.labelDefinition = wx.StaticText(self.mainPanel, label="Definition/Answer:")
+        self.hbox3.Add(self.labelTerm, 2, wx.RIGHT, 50)
+        self.hbox3.Add(self.labelDefinition, 3, wx.RIGHT, 50)
         
         #row 4 is the textboxes for term and definition
         self.hbox4 = wx.BoxSizer(wx.HORIZONTAL)
-        self.text_term = wx.TextCtrl(self.main_panel)
-        #self.text_term.setDefaultStyle(wxTE_PROCESS_ENTER)
-        self.text_definition = wx.TextCtrl(self.main_panel)
-        self.hbox4.Add(self.text_term, 2, wx.RIGHT, 50)
-        self.hbox4.Add(self.text_definition, 3, wx.RIGHT, 50)
+        self.textTerm = wx.TextCtrl(self.mainPanel)
+        #self.textTerm.setDefaultStyle(wxTE_PROCESS_ENTER)
+        self.textDefinition = wx.TextCtrl(self.mainPanel)
+        self.hbox4.Add(self.textTerm, 2, wx.RIGHT, 50)
+        self.hbox4.Add(self.textDefinition, 3, wx.RIGHT, 50)
         
         #row 5 is the textbox for decoy answers
         self.vbox5 = wx.BoxSizer(wx.VERTICAL)
         self.hbox5a = wx.BoxSizer(wx.HORIZONTAL)
         self.hbox5b = wx.BoxSizer(wx.HORIZONTAL)
-        self.label_decoy = wx.StaticText(self.main_panel, label="Decoy Answers:")
-        self.text_decoy = wx.TextCtrl(self.main_panel)
-        self.button_add_decoy = wx.Button(self.main_panel, 8, label="Add Decoy")
+        self.labelDecoy = wx.StaticText(self.mainPanel, label="Decoy Answers:")
+        self.textDecoy = wx.TextCtrl(self.mainPanel)
+        self.buttonAddDecoy = wx.Button(self.mainPanel, 8, label="Add Decoy")
         wx.EVT_BUTTON(self, 8, self._add_decoy)
-        self.button_rem_decoy = wx.Button(self.main_panel, 9, label="Remove Decoy")
+        self.buttonRemDecoy = wx.Button(self.mainPanel, 9, label="Remove Decoy")
         wx.EVT_BUTTON(self, 9, self._rem_decoy)
-        self.decoy_listBox = wx.ListBox(self.main_panel, id=10)
-        self.hbox5a.Add(self.label_decoy, 2, wx.RIGHT, 50)
-        self.hbox5a.Add(self.text_decoy, 3, wx.RIGHT, 50)
-        self.vbox5.Add(self.button_add_decoy, 1, wx.ALL | wx.EXPAND, 5)
-        self.vbox5.Add(self.button_rem_decoy, 1, wx.ALL | wx.EXPAND, 5)
+        self.decoyListBox = wx.ListBox(self.mainPanel, id=10)
+        self.hbox5a.Add(self.labelDecoy, 2, wx.RIGHT, 50)
+        self.hbox5a.Add(self.textDecoy, 3, wx.RIGHT, 50)
+        self.vbox5.Add(self.buttonAddDecoy, 1, wx.ALL | wx.EXPAND, 5)
+        self.vbox5.Add(self.buttonRemDecoy, 1, wx.ALL | wx.EXPAND, 5)
         self.hbox5b.Add(self.vbox5, 2, wx.ALL | wx.EXPAND, 10)
-        self.hbox5b.Add(self.decoy_listBox, 3, wx.ALL | wx.EXPAND, 10)
+        self.hbox5b.Add(self.decoyListBox, 3, wx.ALL | wx.EXPAND, 10)
         
         #row 6
         self.vbox6 = wx.BoxSizer(wx.VERTICAL)
         self.hbox6 = wx.BoxSizer(wx.HORIZONTAL)
-        self.label_list = wx.StaticText(self.main_panel, label="Current\nItems:")
-        self.label_list.SetFont(wx.Font(14, wx.FONTFAMILY_ROMAN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL))
-        self.button_delete = wx.Button(self.main_panel, 3, label="Delete")
+        self.labelList = wx.StaticText(self.mainPanel, label="Current\nItems:")
+        self.labelList.SetFont(wx.Font(14, wx.FONTFAMILY_ROMAN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL))
+        self.button_delete = wx.Button(self.mainPanel, 3, label="Delete")
         wx.EVT_BUTTON(self, 3, self._delete_element)
-        self.button_change = wx.Button(self.main_panel, 4, label="Change")
+        self.buttonChange = wx.Button(self.mainPanel, 4, label="Change")
         wx.EVT_BUTTON(self, 4, self._change_element)
-        self.term_listBox = wx.ListBox(self.main_panel, id=7)
+        self.termListBox = wx.ListBox(self.mainPanel, id=7)
         wx.EVT_LISTBOX(self, 7, self._term_selected)
-        self.vbox6.Add(self.label_list, 1, wx.ALL | wx.EXPAND, 5)
+        self.vbox6.Add(self.labelList, 1, wx.ALL | wx.EXPAND, 5)
         self.vbox6.Add(self.button_delete, 1, wx.ALL | wx.EXPAND, 5)
-        self.vbox6.Add(self.button_change, 1, wx.ALL | wx.EXPAND, 5)
+        self.vbox6.Add(self.buttonChange, 1, wx.ALL | wx.EXPAND, 5)
         self.hbox6.Add(self.vbox6, 2, wx.TOP | wx.LEFT | wx.EXPAND, 0)
-        self.hbox6.Add(self.term_listBox, 3, wx.TOP | wx.RIGHT | wx.EXPAND, 10)
+        self.hbox6.Add(self.termListBox, 3, wx.TOP | wx.RIGHT | wx.EXPAND, 10)
         
         
         #assemble the rows
@@ -105,7 +105,7 @@ class StudyGuideCreator(wx.Frame):
         #button events
         wx.EVT_BUTTON(self, 2, self._add_term)
         wx.EVT_BUTTON(self, 5, self.save)
-        self.main_panel.SetSizer(self.vbox)
+        self.mainPanel.SetSizer(self.vbox)
     
     def init_save_panel(self):
         """ create the save prompt """
@@ -113,9 +113,9 @@ class StudyGuideCreator(wx.Frame):
         self.saveVbox = wx.BoxSizer(wx.VERTICAL)
         
         #create items
-        self.saveFileLabel = wx.StaticText(self.save_panel, label="Save file as:")
-        self.saveFileText = wx.TextCtrl(self.save_panel)
-        self.saveFileSaveButton = wx.Button(self.save_panel, 11, label="FileSave ")
+        self.saveFileLabel = wx.StaticText(self.savePanel, label="Save file as:")
+        self.saveFileText = wx.TextCtrl(self.savePanel)
+        self.saveFileSaveButton = wx.Button(self.savePanel, 11, label="FileSave ")
         wx.EVT_BUTTON(self, 11, self.save_as)
         
         #put them in sizers
@@ -131,74 +131,74 @@ class StudyGuideCreator(wx.Frame):
         self.saveVbox.Add(self.saveHbox2, 1, wx.ALL | wx.EXPAND, 10)
         self.saveVbox.Add(self.saveHbox3, 1, wx.ALL | wx.EXPAND, 10)
         
-        self.save_panel.SetSizer(self.saveVbox)
-        self.save_panel.Hide()
+        self.savePanel.SetSizer(self.saveVbox)
+        self.savePanel.Hide()
     
     def _add_term(self, event):
         """ adds a term to the list """
-        #print "Added term: " + self.text_term.GetValue() + " with definition: " + self.text_definition.GetValue()
-        self.termList.append(self.text_term.GetValue())
+        #print "Added term: " + self.textTerm.GetValue() + " with definition: " + self.textDefinition.GetValue()
+        self.termList.append(self.textTerm.GetValue())
         self.defList.append(self._combine_definitions())
         self.update_list()
         self.update_decoy_list()
     
     def _delete_element(self, event):
         """ deletes a term from the list """
-        self.termList.pop(self.term_listBox.GetSelection())
-        self.defList.pop(self.term_listBox.GetSelection())
+        self.termList.pop(self.termListBox.GetSelection())
+        self.defList.pop(self.termListBox.GetSelection())
         self.update_list()
     
     def _change_element(self, event):
         """ alters the selected term to match the current state """
-        self.termList[self.term_listBox.GetSelection()] = self.text_term.GetValue()
-        self.defList[self.term_listBox.GetSelection()] = self._combine_definitions()
+        self.termList[self.termListBox.GetSelection()] = self.textTerm.GetValue()
+        self.defList[self.termListBox.GetSelection()] = self._combine_definitions()
         self.update_list()
         self.update_decoy_list()
     
     def _term_selected(self, event):
         """ change which term you have selected, and update all items to reflet that """
-        self.text_term.SetValue(self.termList[self.term_listBox.GetSelection()])
-        self.text_definition.SetValue(self.defList[self.term_listBox.GetSelection()][0])
-        self.decoys = [self.defList[self.term_listBox.GetSelection()][i] for i in range(1,len(self.defList[self.term_listBox.GetSelection()]))]
+        self.textTerm.SetValue(self.termList[self.termListBox.GetSelection()])
+        self.textDefinition.SetValue(self.defList[self.termListBox.GetSelection()][0])
+        self.decoys = [self.defList[self.termListBox.GetSelection()][i] for i in range(1,len(self.defList[self.termListBox.GetSelection()]))]
         self.update_decoy_list()
     
     def _add_decoy(self, event):
         """ add a decoy definition to the list of decoy definitions for that term """
-        self.decoys.append(self.text_decoy.GetValue())
+        self.decoys.append(self.textDecoy.GetValue())
         self.update_decoy_list()
     
     def _rem_decoy(self, event):
         """ remove a decoy definition from the list of decoy definitions for that term """
-        self.decoys.pop(self.decoy_listBox.GetSelection())
+        self.decoys.pop(self.decoyListBox.GetSelection())
         self.update_decoy_list()
     
     def _combine_definitions(self):
         """ combine the correct definition and all decoys into one list """
-        result = [self.text_definition.GetValue()]
+        result = [self.textDefinition.GetValue()]
         for i in self.decoys:
             result.append(i)
         return result
     
     def update_decoy_list(self):
         """ update the listBox of decoys to reflect the current state """
-        self.decoy_listBox.Set(self.decoys)
+        self.decoyListBox.Set(self.decoys)
     
     def update_list(self):
         """ update the listBox of terms to reflect the current state """
-        self.term_listBox.Set([self.termList[i] + " = " + self.defList[i][0] for i in range(0, len(self.termList))])
+        self.termListBox.Set([self.termList[i] + " = " + self.defList[i][0] for i in range(0, len(self.termList))])
         
     def save(self, event):
         """ open the save tab """
-        self.main_panel.Hide()
-        self.save_panel.Show()
+        self.mainPanel.Hide()
+        self.savePanel.Show()
         self.sizer.Layout()
     
     def save_as(self, event):
         """ write the data to a save file """
         data = [(self.termList[i], self.defList[i]) for i in range(0, len(self.termList))]
-        gbxml.saveXML(data, self.saveFileText.GetValue())
-        self.save_panel.Hide()
-        self.main_panel.Show()
+        gbxml.save_xml(data, self.saveFileText.GetValue())
+        self.savePanel.Hide()
+        self.mainPanel.Show()
         self.sizer.Layout()
     
     """

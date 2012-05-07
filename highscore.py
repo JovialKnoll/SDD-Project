@@ -17,7 +17,7 @@ databasename = "gigabright"
 #As a side note, limit on score retrieval was removed to access the current user's score position if not in top 10
 
 #Retrieves a list of highscores for a specific game. 
-def retrieveHighscores(game):
+def retrieve_highscores(game):
 
     rows = False
     con = mdb.connect(host, username, password, databasename);
@@ -31,11 +31,11 @@ def retrieveHighscores(game):
         return rows
         
 #Adds a new highscore for a specific game. 
-def addScore(game, score):
+def add_score(game, score):
     success = True
 
     try:
-        player = getPlayer()
+        player = get_player()
         
         con = mdb.connect(host, username, password, databasename);
             
@@ -56,11 +56,11 @@ def addScore(game, score):
     return success
 
 #Reads the player.txt file and returns the players name. 
-def getPlayer():
+def get_player():
     text = open('player.txt', 'r').read()
     return text
         
-#addScore("example.xml", "3000")
-#highscores = retrieveHighscores("example.xml")
+#add_score("example.xml", "3000")
+#highscores = retrieve_highscores("example.xml")
 #for highscore in highscores:
 #    print highscore
