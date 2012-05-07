@@ -3,6 +3,7 @@
 
 from __future__ import division
 import pygame, sys, random
+import pygame._view
 from miniGame import MiniGame
 from lineGame import LineGame
 from flipGame import FlipGame
